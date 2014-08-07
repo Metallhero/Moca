@@ -60,17 +60,16 @@
                 }else {
                     $('#BackButton a').remove();
                 }
-                log(isComments)
                 setTimeout(function () {
                     $('#Wrap').removeClass('vertical_table');
                     var pdfParams = {
-                        'horizontal': [[-20, 5, 250, 260], [-20, 5, 250, 170]],
+                        'horizontal': [[0, 5, 210, 260], [0, 5, 250, 170]],
                         'vertical': [[5, 5, 200, 260], [5, 5, 200, 190]],
                     }, key = 'horizontal';
                     if ($(window).width() < 900) {
                         key = 'vertical';
                     }
-
+                    
                     $('#BackButton').hide();
                     $('#moca-table').show();
                     html2canvas(document.body, {

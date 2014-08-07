@@ -1,0 +1,259 @@
+﻿var DB = (function ($) {
+    function dbase() {
+        var dbShell, $that = this;
+        var GetInsertQueries = function (insertedData) {
+            var insertedQueries = [];
+            $.each(insertedData.data, function (k, v) {
+                var values = [];
+
+                $.each(v, function (key, value) {
+                    values.push("'" + value + "'");
+                });
+
+                var keys = $.map(v, function (item, i) {
+                    return i;
+                });
+
+                var insertedQuery = "INSERT into " + insertedData.tableName + "(" + keys.join(',') + ")" + " values(" + values.join(',') + ")";
+
+                insertedQueries.push(insertedQuery);
+
+            });
+            return insertedQueries;
+        };
+        var GetUpdateQueries = function (updateData) {
+            var updatedQueries = [];
+            $.each(insertedData.data, function (k, v) {
+                var keyValue = [];
+
+                $.each(v, function (key, value) {
+                    keyValue.push(key+"='" + value + "'");
+                });
+
+                //var keys = $.map(v, function (item, i) {
+                //    return i;
+                //});
+
+                var updatedQuery = "Update " + insertedData.tableName + " SET " + keyValue.join(',') ;
+                log(updatedQuery);
+
+                updatedQueries.push(updatedQuery);
+
+            });
+            return insertedQueries;
+        };
+        this.AddTestResult = function (testResultData, callback) {
+            dbShell.transaction(function (tx) {
+                //delete
+                tx.executeSql($this.TestResultQuery(testId, testType), [], function (tx, results) {
+                    (results.rows.length > 0)
+                    {
+                        var resultID = results.rows.item(0).resultID;
+                        GetUpdateQueries(testResultData.MocaTestResults);
+                    }
+                
+                
+                });
+
+                ////
+                var testResultQuery = GetInsertQueries(testResultData.MocaTestResults)[0];
+                log(testResultQuery);
+                tx.executeSql(testResultQuery, [], function (tx, results) {
+                    var testResultId = results.insertId;
+                    log(testResultId);
+
+                    $.each(testResultData.MocaTestResultsValues.data, function (k, v) {
+                        v.resultID = testResultId;
+                    });
+                    var testResultValuesQueries = GetInsertQueries(testResultData.MocaTestResultsValues);
+                    tx.executeSql(testResultValuesQueries, [], function (tx, results) {
+
+                    });
+
+                });
+            }, this.dbErrorHandler, callback);
+
+        };
+        this.GetTestResult = function (testId, testType, callback) {
+            var callbackFun = callback;
+            $this = this;
+
+            dbShell.transaction(function (tx, callback) {
+ 
+                tx.executeSql($this.TestResultQuery(testId, testType), [], function (tx, results) {
+                    if (results.rows.length > 0) {
+                        var testResultData =
+                        {
+                            MocaTestResults: {
+                                tableName: 'MocaTestResults',
+                                data: []
+                            },
+                            MocaTestResultsValues: {
+                                tableName: 'MocaTestResultsValues',
+                                data: []
+                            }
+                        };
+                        var testResult = results.rows.item(0);
+                        var testResultID = testResult.resultID;
+                        testResultData.MocaTestResults.data.push(
+                            {
+                                testID: testResult.testID,
+                                testTypeID: testResult.testTypeID,
+                                score: testResult.score,
+                                timeTest: testResult.timeTest
+                            });
+                        tx.executeSql($this.TestResultValuesQuery(testResultID), [], function (tx, resultValues) {
+                            log(resultValues.rows);
+                            for (var i = 0; i < resultValues.rows.length; i++) {
+                                var resultValue = resultValues.rows.item(i);
+                                testResultData.MocaTestResultsValues.data.push(
+                                    {
+                                        valueResult: resultValue.valueResult,
+                                        valueOptional: resultValue.valueOptional
+                                    });
+                            }
+                            
+                            callbackFun.apply(null, [testResultData]);
+
+                        });
+                    }
+                    else {
+                        callbackFun.apply(null, [null]);
+                    }
+
+
+                });
+            }, this.dbErrorHandler, this.getEntries);
+
+        };
+        ///queries
+        this.GetTestType = function () {
+            var testType = 0;
+            if (window.location.href.indexOf("test_1_") != -1)
+                return 13;
+        }
+        this.TestResultValuesQuery = function (testResultID) {
+            return "SELECT * FROM MocaTestResultsValues Where resultID=" + testResultID;
+        };
+
+        this.TestResultQuery = function (testId, testType) {
+            return "SELECT * FROM MocaTestResults Where testID=" + testId + " AND testTypeID=" + testType;
+        };
+
+        this.SelectImageQuery = function (testId, testType) {
+            return "SELECT * FROM MocaImage Where testID=" + testId + " AND testTypeID=" + testType;
+        };
+        this.DeleteImageQuery = function (testId, testType) {
+            return "Delete FROM MocaImage Where testID=" + testId + " AND testTypeID=" + testType;
+        };
+        this.DeleteTestResultQuery = function (testId, testType) {
+            var deleteTestResults="Delete FROM MocaImage Where testID=" + testId + " AND testTypeID=" + testType;
+            var deletTestResultsValues="Delete FROM MocaImage Where testID=" + testId + " AND testTypeID=" + testType;
+            return [{"Delete FROM MocaImage Where testID=" + testId + " AND testTypeID=" + testType
+        };
+
+        ////////
+        this.dbErrorHandler = function (err) { console.log("DB Error: " + err.message + "\nCode=" + err.code); return true };
+        this.setupTable = function (callback) {
+            dbShell.transaction(function (tx) {
+                tx.executeSql("SELECT count(*) AS 'exist' FROM sqlite_master WHERE type='table' AND name='MocaTestClients'", [], function (tx, data) {
+                    if (data.rows.item(0).exist) {
+                        console.log('return');
+                        return;
+                    }
+                    console.log('CREATE TABLE');
+                    var tables = [
+                          "CREATE TABLE IF NOT EXISTS MocaComments(commentID INTEGER PRIMARY KEY,section TEXT,comment TEXT,caneva TEXT,testID INTEGER,testTypeID INTEGER)",
+                          "CREATE TABLE IF NOT EXISTS MocaTest(testID INTEGER PRIMARY KEY,testDate NUMERIC,clientID INTEGER,userID INTEGER,commentResult TEXT,imageResult TEXT)",
+                         "CREATE TABLE IF NOT EXISTS MocaTestClients(clientID INTEGER PRIMARY KEY,name TEXT,dateOfBirth NUMERIC,gender INTEGER,education TEXT,chartNumber TEXT,physican TEXT)",
+                          "CREATE TABLE IF NOT EXISTS MocaTestGroup(ID INTEGER PRIMARY KEY,Title TEXT)",
+                          "CREATE TABLE IF NOT EXISTS MocaTestResults(resultID INTEGER PRIMARY KEY,testID INTEGER,testTypeID INTEGER,score INTEGER,timeTest NUMERIC,TbNote TEXT)",
+                          "CREATE TABLE IF NOT EXISTS MocaTestResultsValues(resultValueID INTEGER PRIMARY KEY,resultID INTEGER,valueNumber INTEGER,valueResult TEXT,valueOptional TEXT,resultValue NUMERIC)",
+                          "CREATE TABLE IF NOT EXISTS MocaTestType(testTypeID INTEGER PRIMARY KEY,testName TEXT,maxScore INTEGER,maxTime INTEGER)",
+                          "CREATE TABLE IF NOT EXISTS MocaTestType_MocaGroup(GroupId INTEGER,TestTypeId INTEGER)",
+                          "CREATE TABLE IF NOT EXISTS MocaTestUsers(userID INTEGER PRIMARY KEY,name TEXT,occupation TEXT,username TEXT,password TEXT)",
+                          "CREATE TABLE IF NOT EXISTS MocaImage (ID INTEGER PRIMARY KEY, Data TEXT, testID INTEGER, testTypeID INTEGER)"
+                    ];
+                    $.each(tables, function (k, v) {
+                        tx.executeSql(v);
+                    });
+                    var insertedData = {
+                        tableName: 'MocaTestType', data: [
+                            { 'testName': "abstraction_01", 'maxScore': 2, 'maxTime': 10 },
+                            { 'testName': "attention_01", 'maxScore': 1, 'maxTime': 10 },
+                            { 'testName': "attention_02", 'maxScore': 1, 'maxTime': 20 },
+                            { 'testName': "attention_03", 'maxScore': 3, 'maxTime': 5 },
+                            { 'testName': "delayedrecall_01", 'maxScore': 15, 'maxTime': 15 },
+                            { 'testName': "language_01", 'maxScore': 1, 'maxTime': 10 },
+                            { 'testName': "language_02", 'maxScore': 1, 'maxTime': 10 },
+                            { 'testName': "memory_01", 'maxScore': 5, 'maxTime': 20 },
+                            { 'testName': "naming_01", 'maxScore': 3, 'maxTime': 20 },
+                            { 'testName': "naming_02", 'maxScore': 5, 'maxTime': 15 },
+                            { 'testName': "naming_03", 'maxScore': 0, 'maxTime': 15 },
+                            { 'testName': "orientation_01", 'maxScore': 6, 'maxTime': 5 },
+                            { 'testName': "visuospatial_01", 'maxScore': 1, 'maxTime': 30 },
+                            { 'testName': "visuospatial_02", 'maxScore': 1, 'maxTime': 35 },
+                            { 'testName': "visuospatial_03", 'maxScore': 3, 'maxTime': 30 },
+                            { 'testName': "delayedrecall_02", 'maxScore': 0, 'maxTime': 3 },
+                            { 'testName': "delayedrecall_03", 'maxScore': 0, 'maxTime': 5 },
+                            { 'testName': "memory_02", 'maxScore': 0, 'maxTime': 20 },
+                            { 'testName': "attention_01_b", 'maxScore': 1, 'maxTime': 15 },
+                            { 'testName': "language_01_b", 'maxScore': 1, 'maxTime': 5 },
+                        ]
+                    };
+                    var insertedQueries = GetInsertQueries(insertedData);
+                    log("InsertDefaultTable");
+                    $.each(insertedQueries, function (k, v) {
+                        tx.executeSql(v, [], function (tx, results) {
+                            var result = results || null;
+                        });
+                    });
+                });
+            }, this.dbErrorHandler, callback);
+
+        };
+
+        this.insertData = function (insertedData, callback) {
+            dbShell.transaction(function (tx) {
+                log('beginInsert');
+                var insertedQueries = GetInsertQueries(insertedData);
+                $.each(insertedQueries, function (k, v) {
+                    tx.executeSql(v, [], function (tx, results) {
+                        var result = results || null;
+                        callback.apply(null, [result]);
+                    });
+                });
+            },
+            this.dbErrorHandler, this.getEntries);
+        };
+        this.selectData = function (query, callback) {
+            dbShell.transaction(function (tx) {
+                tx.executeSql(query, [], function (tx, results) {
+                    var result = results || null;
+                    callback.apply(null, [result]);
+                });
+            },
+            this.dbErrorHandler, this.getEntries);
+        };
+        this.deleteData = function (query, callback) {
+            dbShell.transaction(function (tx) {
+                tx.executeSql(query, [], function (tx, results) {
+                    var result = results || null;
+                    callback.apply(null, [result]);
+                });
+            },
+            this.dbErrorHandler, this.getEntries);
+        };
+        this.Ready = function (err) {
+            console.log("phoneReady");
+            var maxSize = 5 * 1024 * 1024;
+            dbShell = window.openDatabase("MoCA", 2, "MoCA", maxSize);
+            console.log("db was opened");
+        };
+        document.addEventListener("deviceready", this.Ready.call(this), false);
+    };
+    var DB = new dbase();
+    return DB;
+})(jQuery || $);
+
+function log(s) { console.log(s); };

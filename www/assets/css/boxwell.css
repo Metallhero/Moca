@@ -1,0 +1,64 @@
+
+.separator { clear:both; height:14px;}
+.header .navbar-brand { width:200px;}
+.has-switch > div.switch-off { margin-left: 0px;}
+
+/*BEGIN JSCRIBBLE*/
+.visuoImg1 { width:320px; height:309px; background: url("../img/visuoexec/visuo-1_rev.png") no-repeat -1px -1px rgba(0, 0, 0, 0);}
+ .visuoImg1_norev { width:320px; height:309px; background: url("../img/visuoexec/visuo-1_rev.png") no-repeat -1px -1px rgba(0, 0, 0, 0); -webkit-transform: rotate(-180deg)}
+ .visuoImg_norev { width:320px; height:309px;  -webkit-transform: rotate(-180deg)}
+
+.visuoImg2 { width:320px; height:226px; }
+.visuoImg3 { width:320px; height:355px; }
+#visuoexec {margin: 0 auto;}
+canvas { border:1px solid #e5e5e5; }
+/*#cvs_word { background: url("http://10.47.100.56:3434/assets/img/fluency/line_lightgrey.png") no-repeat 0px 0px rgba(0, 0, 0, 0);}*/
+/*END JSCRIBBLE*/
+
+/*BEGIN PORTLET INSTRUCTIONS*/
+.portlet-body .inst_img {float:right; margin-left:20px;}
+/*END PORTLET INSTRUCTIONS*/
+
+/*BEGIN PORTLET TITLE*/
+/*[class^="icon-"], [class*=" icon-"] {
+    line-height: 24px; margin-right:5px;
+}*/
+.portlet > .portlet-title > .caption {
+    line-height: 30px;
+}
+.portlet > .portlet-title > .tools > a {
+  /*margin-bottom: 2px; width: 30px; height:30px; line-height:30px;*/
+}
+
+.portlet > .portlet-title > .tools > a > [class^="icon-"],.portlet > .portlet-title > .tools > a > [class*=" icon-"] { /*margin:0px; padding:0px; font-size:1.5em; color:#ffffff;*/}
+
+/*BEGIN PORTLET TITLE*/
+/*BEGIN SWITCH*/
+.switch-mini [class^="icon-"], [class*=" icon-"] {
+    line-height: 7px; 
+}
+/*END SWITCH*/
+/*BEGIN PORTLET BOTTOM*/
+.col-md-offset-3 {text-align:right;}
+/*END PORTLET BOTTOM*/
+
+/*BEGIN SPINNER-INPUT*/
+.spinner-input { height:60px; font-size:16px;}
+.spinner-buttons button { padding:0px; width:60px; height:60px; line-height:60px; text-align:center; }
+    .spinner-buttons button > i {font-size:20px; vertical-align: middle; padding:0px; margin:0px;}
+/*END SPINNER-INPUT*/
+
+.start-panel {padding-top:200px; padding-bottom:200px;}
+.hide-test-panel {visibility: hidden; height:0px; overflow:hidden;}
+
+/*CHECKBOX WRONG*/
+.checkwrong div.checker span,.checkwrong div.checker.hover.active span, .checkwrong div.checker.focus.active span {background-position:-209px -260px;}
+.checkwrong div.checker span.checked,.checkwrong div.checker.hover.active span.checked, .checkwrong div.checker.focus.active span.checked {background-position:-189px -260px;}
+
+/*LIMIT HEIGHT AND SCROLL*/
+
+.form-horizontal {height:100%;}
+.form-actions {margin-top:0;}
+.page-content {padding-top:15px;}
+blockquote { background:#DDD; color:#000; font-weight:bold; font-size:1em; font-style:italic; border-left:0px;}
+

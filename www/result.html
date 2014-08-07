@@ -1,0 +1,1259 @@
+﻿<!DOCTYPE html>
+<html dir="ltr" mozdisallowselectionprint moznomarginboxes>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="google" content="notranslate">
+    <title>Test result</title>
+    <script src="assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="assets/scripts/site.manage.js"></script>
+    <script src="assets/scripts/phonegap-1.1.0.js"></script>
+    <script src="assets/scripts/jquery.session.js"></script>
+    <script src="assets/scripts/db.manager.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/adler32cs.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/FileSaver.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/BlobBuilder.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.plugin.addimage.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.plugin.standard_fonts_metrics.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.plugin.split_text_to_size.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/base64.min.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/sprintf.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.plugin.from_html.js"></script>
+    <style type="text/css" media="screen">
+        #preload {
+            display: block;
+            position: fixed;
+            width: 128px;
+            height: 124px;
+            top: 50%;
+            left: 50%;
+            margin-left: -64px;
+            margin-top: -62px;
+            z-index: 2147483647;
+            background: url('img/ploader.gif') no-repeat center top;
+        }
+    </style>
+    <script type="text/javascript" src="assets/scripts/html2canvas.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+            String.prototype.toHHMMSS = function () {
+                var sec_num = parseInt(this, 10); // don't forget the second param
+                var hours   = Math.floor(sec_num / 3600);
+                var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+                var seconds = sec_num - (hours * 3600) - (minutes * 60);
+            
+                if (hours   < 10) {hours   = "0"+hours;}
+                if (minutes < 10) {minutes = "0"+minutes;}
+                if (seconds < 10) {seconds = "0"+seconds;}
+                // var time    = hours+':'+minutes+':'+seconds;                 var time    = minutes+':'+seconds;
+                return time;
+            }
+            
+            
+            if (window.location.hash && window.location.hash.indexOf('#sendTo') != -1) {
+                $('#BackButton').remove();
+                setTimeout(function () {
+
+                    var pdfParams = {
+                        'horizontal': [[-20, 5, 250, 260], [-20, 5, 250, 170]],
+                        'vertical': [[5, 5, 200, 260], [5, 5, 100, 100]],
+                    }, key = 'horizontal';
+                    if ($(window).width() < 900) {
+                        key = 'vertical';
+                    }
+
+                    $('#BackButton').hide();
+                    $('#moca-table').show();
+                    html2canvas(document.body, {
+                        onrendered: function (can) {
+                            var src = can.toDataURL("image/jpeg");
+                            var doc = new jsPDF();
+                            doc.addImage(src, 'JPEG', pdfParams[key][0][0], pdfParams[key][0][1], pdfParams[key][0][2], pdfParams[key][0][3]);
+                            doc.addPage();
+                            $('#BackButton').show();
+                            $('#moca-table').hide();
+                            html2canvas(document.body, {
+                                onrendered: function (canCom) {
+                                    var srcCom = canCom.toDataURL("image/jpeg");
+                                    doc.addImage(srcCom, 'JPEG', pdfParams[key][1][0], pdfParams[key][1][1], pdfParams[key][1][2], pdfParams[key][1][3]);
+                                    var out = doc.output('base');
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "https://mandrillapp.com/api/1.0/messages/send.json",
+                                        data: {
+                                            'key': 'PasmiTz0JPmqTNI87lOckQ',
+                                            'message': {
+                                                'from_email': 'mocamailer@gmail.com',
+                                                'to': [
+                                                    {
+                                                        'email': window.location.hash.split('=')[1],
+                                                        'name': 'MoCA',
+                                                        'type': 'to'
+                                                    }
+                                                ],
+                                                'autotext': 'true',
+                                                "auto_html": 'true',
+                                                'subject': 'MoCA Test Result',
+                                                'html': '<p>Test result in attachments.</p>',
+                                                "attachments": [
+                                                      {
+                                                          "name": $('#patient_name').text() + '_' + $('#test_date').text() + ".pdf",
+                                                          "type": "application/pdf",
+                                                          "binary": true,
+                                                          "content": out
+                                                      }
+                                                ]
+                                            }
+                                        }
+                                    }).done(function (response) {
+                                        var mess = '';
+                                        if (response[0].status != 'error') {
+                                            mess = 'Ok';
+                                        } else {
+                                            mess = 'Error';
+                                        }
+                                        $('#preload').remove();
+                                        $.session.set('SendMessageStatus', mess);
+                                        window.history.back();
+                                    });
+                                }
+                            });
+
+                        }
+                    });
+
+                }, 1000);
+            } else if (window.location.hash && window.location.hash.indexOf('#file') != -1) {
+                $('#BackButton a').remove();
+                $('#BackButton').hide();
+                var pdfParams = {
+                    'horizontal': [[-20, 5, 250, 260], [0, 5, 150, 80]],
+                    'vertical': [[5, 5, 200, 260], [5, 5, 100, 100]],
+                }, key = 'horizontal';
+                if ($(window).width() < 900) {
+                    key = 'vertical';
+                }
+
+                setTimeout(function () {
+                    $('#BackButton').hide();
+                    $('#moca-table').show();
+                    html2canvas(document.body, {
+                        onrendered: function (can) {
+                            $('#moca-table').hide();
+                            var src = can.toDataURL("image/jpeg");
+                            var doc = new jsPDF();
+                            doc.addImage(src, 'JPEG', pdfParams[key][0][0], pdfParams[key][0][1], pdfParams[key][0][2], pdfParams[key][0][3]);
+                            doc.addPage();
+                            $('#BackButton').show();
+                            html2canvas(document.body, {
+                                onrendered: function (canCom) {
+                                    $('#BackButton').hide();
+                                    var srcCom = canCom.toDataURL("image/jpeg");
+                                    doc.addImage(srcCom, 'JPEG', pdfParams[key][1][0], pdfParams[key][1][1], pdfParams[key][1][2], pdfParams[key][1][3]);
+                                    $('#outerContainer').show();
+                                    $('table').hide();
+                                    $('body').removeClass('no-reader');
+                                    var resultPDF = convertDataURIToBinary(doc.output('dataurlstring'));
+                                    ReaderInit(resultPDF);
+                                }
+                            });
+
+                        }
+                    });
+
+
+
+
+                }, 1000);
+            } else {
+                $('#moca-table').show();
+
+            }
+
+
+            function getCommentTitle(testTypeID) {
+                switch (testTypeID) {
+                    case 13:
+                        return "Trail";
+                    case 14:
+                        return "Cube";
+                    case 15:
+                        return "Clock";
+                    case 9:
+                        return "Naming";
+                    case 7:
+                        return "Fluency";
+                }
+                if (testTypeID == 13)
+                    return "Trail";
+
+            }
+
+            var testId = getURLParameters(window.location.href).id;
+            var isComments = getURLParameters(window.location.href).comments;
+            //If comments
+            if (isComments) {
+
+                DB.selectData("Select * From MocaComments Where testID = " + testId, function (result) {
+
+                    for (var i = 0; i < result.rows.length; i++) {
+
+                        var comment = result.rows.item(i);
+                        var title = getCommentTitle(comment.testTypeID);
+
+                        var commentTemplate = $(".commentTemplate").clone();
+                        commentTemplate.removeClass("commentTemplate").addClass("comment");
+                        commentTemplate.css("display", "block");
+                        ///////Title
+                        var titleDiv = commentTemplate.find(".commentTitle");
+                        $(titleDiv).text(title);
+                        //////Comment
+                        var commentDiv = commentTemplate.find(".commentText");
+                        $(commentDiv).text(comment.comment);
+                        /////Img
+                        var commentImgDiv = commentTemplate.find(".commentImg");
+                        $(commentImgDiv).attr('src', comment.caneva);
+
+
+                        $("#comments").append(commentTemplate);
+
+                    }
+
+                });
+
+                DB.selectData(DB.SelectImageQuery(testId, 7), function (result) {//Fluence
+                    if (result.rows.length > 0) {
+                        var test = result.rows.item(0);
+                        var commentImage = test.Data;
+
+                        if (commentImage) {
+                            var title = getCommentTitle(7);
+
+                            var commentTemplate = $(".commentTemplate").clone();
+                            commentTemplate.removeClass("commentTemplate").addClass("comment");
+                            commentTemplate.css("display", "block");
+                            ///////Title
+                            var titleDiv = commentTemplate.find(".commentTitle");
+                            $(titleDiv).text(title);
+                            /////Img
+                            var commentImgDiv = commentTemplate.find(".commentImg");
+                            $(commentImgDiv).attr('src', commentImage);
+                            $(commentImgDiv).css("background", "url(assets/img/fluency/line_lightgrey.png)");
+                            $('#commentTitle').show();
+                            $("#comments").append(commentTemplate);
+                        }
+                    }
+
+                });
+
+
+                DB.selectData("Select * From MocaTest Where testID = " + testId, function (result) {
+                    if (result.rows.length > 0) {
+                        var test = result.rows.item(0);
+                        var commentText = test.commentResult;
+                        var commentImage = test.imageResult;
+
+                        if (commentImage || commentText) {
+                            var title = "Total";
+
+                            var commentTemplate = $(".commentTemplate").clone();
+                            commentTemplate.removeClass("commentTemplate").addClass("comment");
+                            commentTemplate.css("display", "block");
+                            ///////Title
+                            var titleDiv = commentTemplate.find(".commentTitle");
+                            $(titleDiv).text(title);
+                            //////Comment
+                            var commentDiv = commentTemplate.find(".commentText");
+                            $(commentDiv).text(commentText);
+                            /////Img
+                            var commentImgDiv = commentTemplate.find(".commentImg");
+                            $(commentImgDiv).attr('src', commentImage);
+
+                            $('#commentTitle').show();
+                            $("#comments").append(commentTemplate);
+                        }
+                    }
+
+                });
+            }
+
+            var ScoreByType = [];
+            var total = 0;
+            var totalTime = 0;
+            var SetSum = function (groupId, obj) {
+                //log(obj);
+                $('.sum_' + groupId).each(function (index) {
+                    var elemId = "#" + $(this).attr('id');
+                    var elemTimeId = "." + $(this).attr('id').replace("summResult", "summTime");
+                    var id = elemId.split('_');
+                    var item = $(this);
+                    $.each(obj, function (k, v) {
+                        var testType = v.testTypeID.toString();
+
+                        if ($.inArray(testType, id) != -1) {
+                            if (testType == 3) {
+                                var resultSymbol = getTestResultSymbol(v.score);
+                                $("#test_3_1").text(resultSymbol);
+                            }
+                            var text = parseInt($(elemId).text()) || 0;
+                            var textTime = parseInt($(elemTimeId).text()) || 0;
+
+                            text += v.score;
+                            total += v.score;
+                            textTime += v.timeTest;
+                            totalTime += v.timeTest;
+                            if (elemId != "#summResult_8_18"){ //no points
+                                $(elemId).text(text);
+                            }
+                            log(textTime)              
+                                
+                            $(elemTimeId).text(textTime.toString().toHHMMSS());
+                        }
+                    });
+                });
+
+            };
+            DB.GetClientInfo(testId, function (result) {
+                $('#patient_name').text(result.Client.name);
+                $('#patient_chartNumber').text(result.Client.chartNumber);
+                $('#patient_dateOfBirth').text(result.Client.dateOfBirth.split(' ')[0]);
+                $('#patient_education').text(result.Client.education);
+                $('#patient_gender').text(result.Client.gender ? 'Male' : 'Female');
+            });
+
+            DB.selectData("Select ID From MocaTestGroup", function (result) {
+
+                for (var i = 0; i < result.rows.length; i++) {
+                    var groupId = result.rows.item(i).ID;
+                    var resWraps = $('.sum_' + groupId);
+
+
+                    DB.GetTestResultByGroup(testId, groupId, function (result2) {
+
+                        SetSum(result2.groupId, result2.testResult);
+                        if (i == result.rows.length) {
+                            $('#summAll').text(total);
+                            $('#timeAll').text(totalTime);
+                        }
+                        var groupTime = 0;
+                        for (var y = 0; y < result2.testResult.length; y++) {
+
+                            var testResult = result2.testResult[y];
+
+
+                            var testType = testResult.testTypeID;
+
+                            for (var k = 0; k < testResult.testResultValues.length; k++) {
+                                var resultValue = testResult.testResultValues[k];
+
+                                var resultSymbol = getTestResultSymbol(resultValue.valueResult);
+
+
+                                var valOpt = resultValue.valueOptional;
+                                if (testType == 4 || testType == 9) {
+                                    valOpt = resultValue.valueOptional.split("|")[0];
+                                    $("#testVal_" + testType + "_" + valOpt).text(resultValue.valueOptional.split("|")[1]);
+                                }
+                                if (testType == 7) {//11 words
+                                    $("#testVal_" + testType + "_1").text(" (" + resultValue.valueOptional + " words)");
+                                    $("#test_" + testType + "_1").text(resultSymbol);
+                                }
+
+                                $("#test_" + testType + "_" + valOpt).text(resultSymbol);
+                                // }
+
+                                if (testType == 3) {
+                                    $("#word_" + resultValue.valueOptional).css({
+                                        "background": "red",
+                                        "padding": "0 5px 0 5px",
+                                        "color": "#fff"
+                                    });
+                                }
+                            };
+                        };
+
+
+                    });
+                };
+            });
+
+            DB.GetMISTotal(testId, function (result) {
+                $('#summMIS').text(result);
+            });
+            DB.selectData("Select * From MocaTest Where testID = " + testId, function (result) {
+                if (result.rows.length > 0) {
+                    var test = result.rows.item(0);
+                    var date = test.testDate;
+                    var userID = test.userID;
+                    $('#test_date').text(date);
+
+                    DB.selectData("Select * From MocaTestUsers Where userID = " + userID, function (doctor) {
+                        var doc = doctor.rows.item(0);
+                        $("#MDname").text(doc.name);
+                    });
+                }
+            });
+            DB.selectData(DB.SelectImageQuery(testId, 13), function (result) {
+                if (result.rows.length > 0) {
+                    var imgData = result.rows.item(0).Data;
+                    $('#testImg_13').attr('src', imgData);
+                }
+            });
+            DB.selectData(DB.SelectImageQuery(testId, 14), function (result) {
+                if (result.rows.length > 0) {
+                    var imgData = result.rows.item(0).Data;
+                    $('#testImg_14').attr('src', imgData);
+                }
+            });
+            DB.selectData(DB.SelectImageQuery(testId, 15), function (result) {
+                if (result.rows.length > 0) {
+                    var imgData = result.rows.item(0).Data;
+                    $('#testImg_15').attr('src', imgData);
+                }
+            });
+
+            $(window).on('orientationchange', function (event) {
+                if ($(window).width() < 900) {
+                    $('#Wrap').addClass('vertical_table');
+                }else {
+                    $('#Wrap').removeClass('vertical_table');
+                }
+            });
+            
+            if ($(window).width() < 900) {
+                $('#Wrap').addClass('vertical_table');
+            }else {
+                $('#Wrap').removeClass('vertical_table');
+            }
+
+        });
+
+    </script>
+
+</head>
+
+<body tabindex="1" style="" class="no-reader">
+    <div class="Wrap" id="Wrap">
+    <table id="moca-table" style="border-spacing: 0;border: none;font-size: 11px;width: 100%;margin: 0 auto;display: none;">
+        <thead>
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">NAME :</span></th>
+                <th colspan="4" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;">
+                    <label>
+                        <span id="patient_name"></span>
+                    </label>
+                </th>
+            </tr>
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="text-transform: uppercase;font-size: 1.3em;font-weight: 700;">Montreal cognitive assessment (MOCA)</span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">Education :</span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span id="patient_education"></span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">Date of birth :</span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span id="patient_dateOfBirth"></span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"></th>
+            </tr>
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <th style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;font-size:1.5em;">Version 8.1 Original Version</th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">Sex :</span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span id="patient_gender"></span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">DATE :</span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span id="test_date"></span></th>
+                <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"></th>
+            </tr>
+        </thead>
+        <tbody style="border-spacing: 0;border: none;border-collapse:collapse;">
+            <!--     VISUOSPATIAL / EXECUTIVE   -->
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="3" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative; -webkit-border-radius: 12px 0 0 0;border-radius: 12px 0 0 0; -moz-border-radius:12px 0 0 0;border-bottom:0;border-right:0;">
+                    <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:700;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -5px;-webkit-border-radius: 12px 0 0 0;border-radius: 12px 0 0 0; -moz-border-radius:12px 0 0 0;">Visuospatial / Executive</span></div>
+                    <div style="float: left;margin: 40px 20px 20px 20px; ">
+                        <img src="" id="testImg_13" alt="" style="background: url('assets/img/visuoexec/visuo-1_rev.png'); display: block;-webkit-transform: rotate(-180deg);background-size: 215px;" width="215" height="210" title="" />
+                        <div style="position: relative;">
+                            <div style="bottom: 0;margin: 0 0 20px 200px;position: absolute;top: -15px;">
+                                <label style="font-size: 15px;">[ <span id="test_13_1"></span> ]</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="float: right;margin: 5px 0 0 0px;position:relative;">
+                        <img src="./result/visuo-2.png" alt="" width="103" style="border: 0;margin: 0 0 0 45px;" title="" />
+                        <span style="position:absolute;right:19px;font-size:1.2em;">Copy<br />cube</span>
+                        <div style="position: relative;">
+                            <img src="" alt="" id="testImg_14" width="220" height="155" style="border: 0; display: block;-webkit-transform: rotate(-180deg);" title="" />
+                            <div style="position: absolute;bottom: 0;margin: 0 0 20px 180px;top: 140px;">
+                                <label style="font-size: 15px;">[ <span id="test_14_1"></span> ]</label>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="2" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <span style="padding:5px 0 0 10px;display:block;font-size:1.2em;">Draw CLOCK (Ten past eleven)<br />(3 points)</span>
+                    <br />  <img src="" id="testImg_15" alt="" width="225" height="250" style="border: 0; display: block;-webkit-transform: rotate(-180deg);position: relative;top: -35px;" title="" />
+                    <div style="position: relative;">
+                        <div style="position: absolute;top: -40px;">
+                            <div style="float: left;margin: 0 10px;text-align: center;font-size: 14px;">
+                                <label style="font-size: 15px;">[ <span id="test_15_1"></span> ]</label><br /><span style="font-weight:bold;">Contour</span>
+                            </div>
+                            <div style="float: left;margin: 0 10px;text-align: center;font-size: 14px;">
+                                <label style="font-size: 15px;">[ <span id="test_15_2"></span> ]</label><br /><span style="font-weight:bold;">Numbers</span>
+                            </div>
+                            <div style="float: left;margin: 0 10px;text-align: center;font-size: 14px;">
+                                <label style="font-size: 15px;">[ <span id="test_15_3"></span> ]</label><br /><span style="font-weight:bold;">Hands</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" style="width:50px; border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <div style="width: 100%;"><span style="background: #000;width: 100%;color: #fff;font-size: 0.7em;text-transform: uppercase;padding: 5px 4px;position: absolute;top: 0px;left: -3px;">Time</span></div>
+                    <label class="summTime_13_14_15"> </label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;-webkit-border-radius: 0 12px 0 0;border-radius: 0 12px 0 0; -moz-border-radius:0 12px 0 0;border-bottom:0;">
+                    <div style=""><span style="background: #000;color: #fff;font-size: 0.7em;text-transform: uppercase;padding: 5px 4px;position: absolute;top: 0px;left: -3px;-webkit-border-radius: 0 12px 0 0;border-radius: 0 12px 0 0; -moz-border-radius:0 12px 0 0;">Points</span></div>
+                    <label class="sum_1" id="summResult_13_14_15"></label>/5
+                </td>
+            </tr>
+            <!-- <tr>
+                 <td colspan="6">%%visuospatialComments%%</td>
+
+             </tr>-->
+            <!--     END VISUOSPATIAL / EXECUTIVE   -->
+            <!--     NAMING     -->
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <div style="position: relative;float: left;padding: 7px;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:700;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;z-index: 99;">Naming</span></div>
+                    <div style="float: left;padding: 7px 7px 7px 7px;position:relative;">
+                        <img src="./result/name-1.png" alt="" width="200" height="130" title="" />
+                        <div style="position: relative;padding: 7px;">
+                            <div style="float: left;padding: 7px;position: absolute;top: 6px;margin: 0 0 0 80px;">
+                                <label style="font-size: 15px;">[ <span id="test_9_1"></span> ] <span id="testVal_9_1"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="float: left;padding: 7px 7px 7px 7px;">
+                        <img src="./result/name-2.png" alt="" width="200" height="130" title="" />
+                        <div style="position: relative;;padding: 7px;">
+                            <div style="float: left;padding: 7px;position: absolute;top: 6px;margin: 0 0 0 80px;">
+                                <label style="font-size: 15px;">[ <span id="test_9_2"></span> ] <span id="testVal_9_2"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="float: left;padding: 7px 7px 7px 7px;">
+                        <img src="./result/name-3.png" alt="" width="180" height="150" title="" />
+                        <div style="position: relative;padding: 7px;">
+                            <div style="float: left;padding: 7px;position: absolute;top: -9px;margin: 0 0 0 80px;">
+                                <label style="font-size: 15px;">[ <span id="test_9_3"></span> ] <span id="testVal_9_3"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_9"> </label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_9" class="sum_2"></span>/3</td>
+            </tr>
+            <!--    END NAMING      -->
+            <!--     MEMORY     -->
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Memory</span></div>
+                    <div style="margin: 10px 0 10px 100px;">
+                        <span style="font-size:1.1em">
+                            Read list of words, subject must repeat them.
+                            <br />Do 2 trials, even if 1<sup style="font-size: 75%;line-height: 0;position: relative;vertical-align: baseline;top: -0.5em;">st</sup> trial is successful.
+                            <br />Do a recall after 5 minutes.
+                        </span>
+                    </div>
+                </td>
+                <td colspan="4" style="border: none;padding:0;margin:0;white-space: normal;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <table id="memory-table" style="border-collapse: collapse;border-spacing: 0;width: 100%;">
+                        <tbody>
+                            <tr style="border: none;padding: 0.1rem 1rem;">
+                                <td style="border: 2px solid #000;border-left:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"></td>
+                                <td style="border: 2px solid #000;padding: 0.2rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">FACE</span></td>
+                                <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">VELVET</span></td>
+                                <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">CHURCH</span></td>
+                                <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">DAISY</span></td>
+                                <td style="border: 2px solid #000;border-right:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">RED</span></td>
+                            </tr>
+                            <tr style="border: none;padding: 0.1rem 1rem;">
+                                <td style="border: 2px solid #000;border-left:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.2em">1<sup style="font-size: 75%;line-height: 0;position: relative;vertical-align: baseline;top: -0.5em;">st</sup> trial</span></td>
+                                <td style="border: 2px solid #000;padding: 0.2rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_1"></span> ] </label></td>
+                                <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_2"></span> ] </label></td>
+                                <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_3"></span> ] </label></td>
+                                <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_4"></span> ] </label></td>
+                                <td style="border: 2px solid #000;border-right:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_5"></span> ] </label></td>
+                            </tr>
+                            <tr style="border: none;padding: 0.1rem 1rem;">
+                                <td style="border: 2px solid #000;border-bottom:0;border-left:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.2em">2<sup style="font-size: 75%;line-height: 0;position: relative;vertical-align: baseline;top: -0.5em;">nd</sup> trial</span></td>
+                                <td style="border: 2px solid #000;border-bottom:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_1"></span> ] </label></td>
+                                <td style="border: 2px solid #000;border-bottom:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_2"></span> ] </label></td>
+                                <td style="border: 2px solid #000;border-bottom:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_3"></span> ] </label></td>
+                                <td style="border: 2px solid #000;border-bottom:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_4"></span> ] </label></td>
+                                <td style="border: 2px solid #000;border-bottom:0;border-right:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_5"></span> ] </label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_8_18 "></label>
+                </td>
+                <td colspan="1" class="sum_8" id="summResult_8_18" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: middle;position: relative;text-align: left;font-size: 11px;border-bottom:0;">No<br />points</td>
+            </tr>
+            <!--     END MEMORY     -->
+            <!--     ATTENTION      -->
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-right: none;border-bottom:0;border-right:0;">
+                    <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Attention</span></div>
+                    <div style="margin: 10px 0 10px 100px;">
+                        <span style="font-size:1.1em;">Read list of digits (1 digit/sec.).</span>
+                    </div>
+                </td>
+                <td colspan="3" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-left:none;border-right:none;border-bottom:0;border-right:0;">
+                    <div style="margin: 10px 0 10px;">
+                        <span style="font-size:1.1em;">Subject has to repeat them in the forward order<br />    Subject has to repeat them in the backward order</span>
+                    </div>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-left:none;border-bottom:0;border-right:0;">
+                    <div style="margin: 10px 0 10px;">
+                        <label style="font-size: 15px;">[ <span id="test_2_1"></span> ]</label> <span style="font-size:1.3em;">2 1 8 5 4</span><br />
+                        <label style="font-size: 15px;">[ <span id="test_19_1"></span> ]</label> <span style="font-size:1.3em;">7 4 2</span>
+                    </div>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_2_19" id="timeResult"></label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_2_19" class="sum_3"></span>/2</td>
+            </tr>
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <div style="margin: 10px 0 10px;">
+                        <span style="font-size:1.1em;">Read list of letters. The subject must tap with his hand at each letter A. No points if ≥ 2 errors<br /></span>
+                        <div style="text-align: right;margin:5px 0;">
+                            <label style="font-size: 15px;">[ <span id="test_3_1"></span> ]</label>
+                            <span style="font-size:1.2em;" id="wordWrap">
+                                <span id="word_1">F</span>
+                                <span id="word_2">B</span>
+                                <span id="word_3">A</span>
+                                <span id="word_4">C</span>
+                                <span id="word_5">M</span>
+                                <span id="word_6">N</span>
+                                <span id="word_7">A</span>
+                                <span id="word_8">A</span>
+                                <span id="word_9">J</span>
+                                <span id="word_10">K</span>
+                                <span id="word_11">L</span>
+                                <span id="word_12">B</span>
+                                <span id="word_13">A</span>
+                                <span id="word_14">F</span>
+                                <span id="word_15">A</span>
+                                <span id="word_16">K</span>
+                                <span id="word_17">D</span>
+                                <span id="word_18">E</span>
+                                <span id="word_19">A</span>
+                                <span id="word_20">A</span>
+                                <span id="word_21">A</span>
+                                <span id="word_22">J</span>
+                                <span id="word_23">A</span>
+                                <span id="word_24">M</span>
+                                <span id="word_25">O</span>
+                                <span id="word_26">F</span>
+                                <span id="word_27">A</span>
+                                <span id="word_28">A</span>
+                                <span id="word_29">B</span>
+                            </span>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_3" id="timeResult"></label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_3" class="sum_3"></span>/1</td>
+            </tr>
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <div style="margin: 10px 0 10px;">
+                        <span style="font-size:1.1em;">Serial 7 subtraction starting at 100</span>
+                        <span style="display: inline-block;margin: 0 30px;">
+                            <label style="font-size: 15px;">[ <span id="test_4_1"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_1"></span></span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 30px;">
+                            <label style="font-size: 15px;">[ <span id="test_4_2"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_2"></span></span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 30px;">
+                            <label style="font-size: 15px;">[ <span id="test_4_3"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_3"></span></span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 30px;">
+                            <label style="font-size: 15px;">[ <span id="test_4_4"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_4"></span></span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 30px;">
+                            <label style="font-size: 15px;">[ <span id="test_4_5"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_5"></span></span>
+                        </span>
+                    </div>
+                    <div style="margin: 10px 0 10px;text-align: right;">
+                        4 of 5 correct subtractions: <span style="font-weight: 700;font-size:1.1em;">3 pts</span>, 2 or 3 correct: <span style="font-weight: 700;font-size:1.1em;">2 pts</span>, 1 correct: <span style="font-weight: 700;font-size:1.1em;">1 pt</span>, 0 correct: <span style="font-weight: 700;font-size:1.1em;">0 pt</span>
+                    </div>
+
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_4" id="timeResult"></label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_4" class="sum_3"></span>/3</td>
+            </tr>
+            <!--     END ATTENTION      -->
+            <!--     LANGUAGE   -->
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Language </span></div>
+                    <div style="margin: 10px 0 10px 100px;">
+                        <span style="font-size:1.1em;">Repeat: I only know that John is the one to help today.</span> <label style="font-size: 15px;">[ <span id="test_6_1"></span> ]</label>
+                        <div style="margin: 0;">
+                            <span style="font-size:1.1em;">The cat always hid under the couch when dogs were in the room.</span> <label style="font-size: 15px;">[ <span id="test_20_1"></span> ]</label>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_6_20" id="timeResult"></label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_6_20" class="sum_4"></span>/2</td>
+            </tr>
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <div style="margin: 10px 0 10px;">
+                        <span style="font-size:1.1em;float:left;padding:0 0 5px 30px;">Fluency / Name maximum number of words in one minute that begin with the letter F. </span><label style="font-size: 1.2em;">[ <span id="test_7_1"></span> ]</label> <span style="font-size: 1.2em;" id="testVal_7_1"></span>
+
+                        <span style="float: right;font-size: 1.2em;margin:-5px 20px 0 0;display:block;">    (N <span style="font-weight:bold;">≥</span> 11 words)</span>
+                    </div>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_7"></label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_7" class="sum_4"></span>/1</td>
+            </tr>
+            <!--     END LANGUAGE   -->
+            <!--     ABSTRACTION    -->
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Abstraction</span></div>
+                    <div style="margin: 5px 0 5px 135px;">
+                        <span style="font-size:1.1em;">Similarity between e.g. banana - orange = fuit</span>
+                        <span style="display: inline-block;margin: 0 20px;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_1_1"></span> ]</label> train-bicycle</span>
+                        <span style="display: inline-block;margin: 0 20px;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_1_2"></span> ]</label> watch-ruler</span>
+                    </div>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_1"> </label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_1" class="sum_5"></span>/2</td>
+            </tr>
+            <!--     END ABSTRACTION    -->
+            <!--     DELAYED RECALL     -->
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="5" style="border: none;padding: 0;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                    <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Delayed recall</span></div>
+                    <div style="margin: 0 0 0 135px;">
+                        <div style="position: relative;"><span style="position: absolute;top: 40px;left: -120px;text-transform: uppercase;font-size: 18px;font-weight: 700;"></span></div>
+                        <table id="memory-table" style="border-collapse: collapse; border-spacing: 0; vertical-align: top; width: 100%; ">
+                            <tbody>
+                                <tr style="border: none;padding: 0.1rem 1rem;">
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;text-align:right;">Has to recall words<br />WITH NO CUE</td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;">FACE<br /><label style="font-size: 1.1em;">[ <span id="test_5_1"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;">VELVET<br /><label style="font-size: 1.1em;">[ <span id="test_5_2"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;">CHURCH<br /><label style="font-size: 1.1em;">[ <span id="test_5_3"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;">DAISY<br /><label style="font-size: 1.1em;">[ <span id="test_5_4"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-right:none;font-size:1.2em;">RED<br /><label style="font-size: 1.1em;">[ <span id="test_5_5"></span> ]</label></td>
+                                </tr>
+                                <tr style="border: none;padding: 0.1rem 1rem;">
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;text-align:right;">Category cue</td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_6"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_7"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_8"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_9"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-right:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_10"></span> ]</label></td>
+                                </tr>
+                                <tr style="border: none;padding: 0.1rem 1rem;">
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;text-align:right;">Multiple choice cue</td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_11"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_12"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_13"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_14"></span> ]</label></td>
+                                    <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;border-right:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_15"></span> ]</label></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                    <label class="summTime_5" id="timeResult"></label>
+                </td>
+
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_5" class="sum_6"></span>/5</td>
+            </tr>
+            <!--     END DELAYED RECALL     -->
+            <!--     ORIENTATION    -->
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-right:0;-webkit-border-radius: 0 0 0 12px;border-radius: 0 0 0 12px; -moz-border-radius:0 0 0 12px;">
+                    <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 8px 10px;position: absolute;top: -2px;left: -4px;-webkit-border-radius: 0 0 0 12px;border-radius: 0 0 0 12px; -moz-border-radius:0 0 0 12px;">Orientation</span></div>
+                    <div style="margin: 5px 0 0 135px;">
+                        <span style="display: inline-block;margin: 0 20px;">
+                            <label style="font-size: 1.1em;">[ <span id="test_12_1"></span> ]</label><span style="font-size:1.2em;">&nbsp;Date</span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 20px;">
+                            <label style="font-size: 1.1em;">[ <span id="test_12_2"></span> ]</label><span style="font-size:1.2em;">&nbsp;Month</span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 20px;">
+                            <label style="font-size: 1.1em;">[ <span id="test_12_3"></span> ]</label><span style="font-size:1.2em;">&nbsp;Year</span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 20px;">
+                            <label style="font-size: 1.1em;">[ <span id="test_12_4"></span> ]</label><span style="font-size:1.2em;">&nbsp;Day</span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 20px;">
+                            <label style="font-size: 1.1em;">[ <span id="test_12_5"></span> ]</label><span style="font-size:1.2em;">&nbsp;Place</span>
+                        </span>
+                        <span style="display: inline-block;margin: 0 20px;">
+                            <label style="font-size: 1.1em;">[ <span id="test_12_6"></span> ]</label><span style="font-size:1.2em;">&nbsp;City</span>
+                        </span>
+                    </div>
+                </td>
+
+                <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-right:0;">
+                    <label class="summTime_12" id="timeResult"></label>
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;"><span id="summResult_12" class="sum_7"></span>/6</td>
+            </tr>
+            <!--     END ORIENTATION    -->
+        </tbody>
+        <tfoot>
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;"><span style="font-weight: 700;font-size:1.1em;">© Z.Nasreddine MD</span></td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;"><span style="font-weight: 700;font-size:1.2em;">www.mocatest.org</span></td>
+                <td colspan="2" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;font-size:1.2em;text-align:right;"><label>Normal ≥ 26 / 30</label></td>
+                <td colspan="2" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-right: none;font-size: 15px;border-top:0;-webkit-border-radius: 0 0 0 12px;border-radius: 0 0 0 12px; -moz-border-radius:0 0 0 12px;">
+                    <label>MIS<br /><b>TOTAL</b></label><br /><b>TOTAL TIME</b></label>
+
+                </td>
+                <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-left: none;border-top:0;-webkit-border-radius: 0 0 12px 0;border-radius: 0 0 12px 0; -moz-border-radius:0 0 12px 0;">
+                    <label>
+                        <span id="summMIS"></span>/15<br /><b><span id="summAll"></span>/30</b><br /><b>
+                            <span id="timeAll">05:30</span>
+                        </b>
+                    </label>
+                </td>
+            </tr>
+            <tr style="border: none;padding: 0.1rem 0.2rem;">
+                <td colspan="4" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;font-size:1.2em;">Administered by: <span id="MDname"></span></td>
+                <td colspan="2" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;text-align:center;font-size:1.1em;">Add 1 point if ≤ 12 yr edu</td>
+            </tr>
+
+        </tfoot>
+    </table>
+    <table style="border-spacing: 0;border: none;font-size: 11px;width: 80%;margin: 0 auto;max-width: 900px;">
+        <tr id="BackButton">
+            <td colspan="6">
+                <p style="font-size: 30px;text-decoration: underline;display: none;" id="commentTitle">Comments</p>
+                <div id="comments" style="margin-top: 20px;">
+                    <div class="commentTemplate" style="display:none;">
+                        <div style=" font-size:25px" class="commentTitle"></div><br />
+                        <div class="commentText"></div>
+                        <img class="commentImg" style="width:200px" />
+                    </div>
+                </div>
+                <div class="" style="text-align: right;">
+                    <a href="#" style="    padding: 5px 10px; margin: 10px 0;   display: inline-block;    font-size: 16px;    text-decoration: none;    color: #fff; background: #000;
+    font-weight: bold;    text-transform: uppercase;" onclick="window.history.back();return false;">Back</a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+    <style type="text/css" media="screen">
+        .comment {
+            float: left;
+            width: 33%;
+        }
+        .vertical_table{
+            -webkit-transform: scale(0.85);
+            position: relative;
+            left: -45px;
+            top: -90px;
+        }
+        .vertical_table #moca-table + table {
+            width: 114% !important;
+            max-width: 0;
+        }
+    </style>
+
+
+    <div id="outerContainer" class="loadingInProgress" style="display: none;">
+        <div class="" style="text-align: left;position: fixed;top: 24px;z-index: 999;">
+            <a href="#" style="    padding: 5px 10px; margin: 10px 0;   display: inline-block;    font-size: 16px;    text-decoration: none;    color: #fff; background: #000;
+    font-weight: bold;    text-transform: uppercase;" onclick="window.location = 'testList.html';return false;">Back</a>
+        </div>
+        <div id="sidebarContainer">
+            <div id="toolbarSidebar">
+                <div class="splitToolbarButton toggled">
+                    <button id="viewThumbnail" class="toolbarButton group toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
+                        <span data-l10n-id="thumbs_label">Thumbnails</span>
+                    </button>
+                    <button id="viewOutline" class="toolbarButton group" title="Show Document Outline" tabindex="3" data-l10n-id="outline">
+                        <span data-l10n-id="outline_label">Document Outline</span>
+                    </button>
+                    <button id="viewAttachments" class="toolbarButton group" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
+                        <span data-l10n-id="attachments_label">Attachments</span>
+                    </button>
+                </div>
+            </div>
+            <div id="sidebarContent">
+                <div id="thumbnailView">
+                </div>
+                <div id="outlineView" class="hidden">
+                </div>
+                <div id="attachmentsView" class="hidden">
+                </div>
+            </div>
+        </div>  <!-- sidebarContainer -->
+
+        <div id="mainContainer">
+            <div class="findbar hidden doorHanger hiddenSmallView" id="findbar">
+                <label for="findInput" class="toolbarLabel" data-l10n-id="find_label">Find:</label>
+                <input id="findInput" class="toolbarField" tabindex="41">
+                <div class="splitToolbarButton">
+                    <button class="toolbarButton findPrevious" title="" id="findPrevious" tabindex="42" data-l10n-id="find_previous">
+                        <span data-l10n-id="find_previous_label">Previous</span>
+                    </button>
+                    <div class="splitToolbarButtonSeparator"></div>
+                    <button class="toolbarButton findNext" title="" id="findNext" tabindex="43" data-l10n-id="find_next">
+                        <span data-l10n-id="find_next_label">Next</span>
+                    </button>
+                </div>
+                <input type="checkbox" id="findHighlightAll" class="toolbarField">
+                <label for="findHighlightAll" class="toolbarLabel" tabindex="44" data-l10n-id="find_highlight">Highlight all</label>
+                <input type="checkbox" id="findMatchCase" class="toolbarField">
+                <label for="findMatchCase" class="toolbarLabel" tabindex="45" data-l10n-id="find_match_case_label">Match case</label>
+                <span id="findMsg" class="toolbarLabel"></span>
+            </div>  <!-- findbar -->
+
+            <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
+                <div id="secondaryToolbarButtonContainer">
+                    <button id="secondaryPresentationMode" class="secondaryToolbarButton presentationMode visibleLargeView" title="Switch to Presentation Mode" tabindex="19" data-l10n-id="presentation_mode">
+                        <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
+                    </button>
+
+                    <button id="secondaryOpenFile" class="secondaryToolbarButton openFile visibleLargeView" title="Open File" tabindex="20" data-l10n-id="open_file">
+                        <span data-l10n-id="open_file_label">Open</span>
+                    </button>
+
+                    <button id="secondaryPrint" class="secondaryToolbarButton print visibleMediumView" title="Print" tabindex="21" data-l10n-id="print">
+                        <span data-l10n-id="print_label">Print</span>
+                    </button>
+
+                    <button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView" title="Download" tabindex="22" data-l10n-id="download">
+                        <span data-l10n-id="download_label">Download</span>
+                    </button>
+
+                    <a href="#" id="secondaryViewBookmark" class="secondaryToolbarButton bookmark visibleSmallView" title="Current view (copy or open in new window)" tabindex="23" data-l10n-id="bookmark">
+                        <span data-l10n-id="bookmark_label">Current View</span>
+                    </a>
+
+                    <div class="horizontalToolbarSeparator visibleLargeView"></div>
+
+                    <button id="firstPage" class="secondaryToolbarButton firstPage" title="Go to First Page" tabindex="24" data-l10n-id="first_page">
+                        <span data-l10n-id="first_page_label">Go to First Page</span>
+                    </button>
+                    <button id="lastPage" class="secondaryToolbarButton lastPage" title="Go to Last Page" tabindex="25" data-l10n-id="last_page">
+                        <span data-l10n-id="last_page_label">Go to Last Page</span>
+                    </button>
+
+                    <div class="horizontalToolbarSeparator"></div>
+
+                    <button id="pageRotateCw" class="secondaryToolbarButton rotateCw" title="Rotate Clockwise" tabindex="26" data-l10n-id="page_rotate_cw">
+                        <span data-l10n-id="page_rotate_cw_label">Rotate Clockwise</span>
+                    </button>
+                    <button id="pageRotateCcw" class="secondaryToolbarButton rotateCcw" title="Rotate Counterclockwise" tabindex="27" data-l10n-id="page_rotate_ccw">
+                        <span data-l10n-id="page_rotate_ccw_label">Rotate Counterclockwise</span>
+                    </button>
+
+                    <div class="horizontalToolbarSeparator"></div>
+
+                    <button id="toggleHandTool" class="secondaryToolbarButton handTool" title="Enable hand tool" tabindex="28" data-l10n-id="hand_tool_enable">
+                        <span data-l10n-id="hand_tool_enable_label">Enable hand tool</span>
+                    </button>
+
+                    <div class="horizontalToolbarSeparator"></div>
+
+                    <button id="documentProperties" class="secondaryToolbarButton documentProperties" title="Document Properties…" tabindex="29" data-l10n-id="document_properties">
+                        <span data-l10n-id="document_properties_label">Document Properties…</span>
+                    </button>
+                </div>
+            </div>  <!-- secondaryToolbar -->
+
+            <div class="toolbar">
+                <div id="toolbarContainer">
+                    <div id="toolbarViewer">
+                        <div id="toolbarViewerLeft">
+                            <button id="sidebarToggle" class="toolbarButton" title="Toggle Sidebar" tabindex="5" data-l10n-id="toggle_sidebar">
+                                <span data-l10n-id="toggle_sidebar_label">Toggle Sidebar</span>
+                            </button>
+                            <div class="toolbarButtonSpacer"></div>
+                            <button id="viewFind" class="toolbarButton group hiddenSmallView" title="Find in Document" tabindex="6" data-l10n-id="findbar">
+                                <span data-l10n-id="findbar_label">Find</span>
+                            </button>
+                            <div class="splitToolbarButton">
+                                <button class="toolbarButton pageUp" title="Previous Page" id="previous" tabindex="7" data-l10n-id="previous">
+                                    <span data-l10n-id="previous_label">Previous</span>
+                                </button>
+                                <div class="splitToolbarButtonSeparator"></div>
+                                <button class="toolbarButton pageDown" title="Next Page" id="next" tabindex="8" data-l10n-id="next">
+                                    <span data-l10n-id="next_label">Next</span>
+                                </button>
+                            </div>
+                            <label id="pageNumberLabel" class="toolbarLabel" for="pageNumber" data-l10n-id="page_label">Page: </label>
+                            <input type="number" id="pageNumber" class="toolbarField pageNumber" value="1" size="4" min="1" tabindex="9">
+                            <span id="numPages" class="toolbarLabel"></span>
+                        </div>
+                        <div id="toolbarViewerRight">
+                            <button id="presentationMode" class="toolbarButton presentationMode hiddenLargeView" title="Switch to Presentation Mode" tabindex="13" data-l10n-id="presentation_mode">
+                                <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
+                            </button>
+
+                            <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="14" data-l10n-id="open_file">
+                                <span data-l10n-id="open_file_label">Open</span>
+                            </button>
+
+                            <button id="print" class="toolbarButton print hiddenMediumView" title="Print" tabindex="15" data-l10n-id="print">
+                                <span data-l10n-id="print_label">Print</span>
+                            </button>
+
+                            <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="16" data-l10n-id="download">
+                                <span data-l10n-id="download_label">Download</span>
+                            </button>
+                            <!-- <div class="toolbarButtonSpacer"></div> -->
+                            <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="17" data-l10n-id="bookmark">
+                                <span data-l10n-id="bookmark_label">Current View</span>
+                            </a>
+
+                            <div class="verticalToolbarSeparator hiddenSmallView"></div>
+
+                            <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="18" data-l10n-id="tools">
+                                <span data-l10n-id="tools_label">Tools</span>
+                            </button>
+                        </div>
+                        <div class="outerCenter">
+                            <div class="innerCenter" id="toolbarViewerMiddle">
+                                <div class="splitToolbarButton">
+                                    <button id="zoomOut" class="toolbarButton zoomOut" title="Zoom Out" tabindex="10" data-l10n-id="zoom_out">
+                                        <span data-l10n-id="zoom_out_label">Zoom Out</span>
+                                    </button>
+                                    <div class="splitToolbarButtonSeparator"></div>
+                                    <button id="zoomIn" class="toolbarButton zoomIn" title="Zoom In" tabindex="11" data-l10n-id="zoom_in">
+                                        <span data-l10n-id="zoom_in_label">Zoom In</span>
+                                    </button>
+                                </div>
+                                <span id="scaleSelectContainer" class="dropdownToolbarButton">
+                                    <select id="scaleSelect" title="Zoom" tabindex="12" data-l10n-id="zoom">
+                                        <option id="pageAutoOption" title="" value="auto" selected="selected" data-l10n-id="page_scale_auto">Automatic Zoom</option>
+                                        <option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual Size</option>
+                                        <option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Fit Page</option>
+                                        <option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Full Width</option>
+                                        <option id="customScaleOption" title="" value="custom"></option>
+                                        <option title="" value="0.5">50%</option>
+                                        <option title="" value="0.75">75%</option>
+                                        <option title="" value="1">100%</option>
+                                        <option title="" value="1.25">125%</option>
+                                        <option title="" value="1.5">150%</option>
+                                        <option title="" value="2">200%</option>
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="loadingBar">
+                        <div class="progress">
+                            <div class="glimmer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <menu type="context" id="viewerContextMenu">
+                <menuitem id="contextFirstPage" label="First Page"
+                          data-l10n-id="first_page"></menuitem>
+                <menuitem id="contextLastPage" label="Last Page"
+                          data-l10n-id="last_page"></menuitem>
+                <menuitem id="contextPageRotateCw" label="Rotate Clockwise"
+                          data-l10n-id="page_rotate_cw"></menuitem>
+                <menuitem id="contextPageRotateCcw" label="Rotate Counter-Clockwise"
+                          data-l10n-id="page_rotate_ccw"></menuitem>
+            </menu>
+
+            <div id="viewerContainer" tabindex="0">
+                <div id="viewer"></div>
+            </div>
+
+            <div id="errorWrapper" hidden='true'>
+                <div id="errorMessageLeft">
+                    <span id="errorMessage"></span>
+                    <button id="errorShowMore" data-l10n-id="error_more_info">
+                        More Information
+                    </button>
+                    <button id="errorShowLess" data-l10n-id="error_less_info" hidden='true'>
+                        Less Information
+                    </button>
+                </div>
+                <div id="errorMessageRight">
+                    <button id="errorClose" data-l10n-id="error_close">
+                        Close
+                    </button>
+                </div>
+                <div class="clearBoth"></div>
+                <textarea id="errorMoreInfo" hidden='true' readonly="readonly"></textarea>
+            </div>
+        </div> <!-- mainContainer -->
+
+        <div id="overlayContainer" class="hidden">
+            <div id="promptContainer" class="hidden">
+                <div id="passwordContainer" class="prompt doorHanger">
+                    <div class="row">
+                        <p id="passwordText" data-l10n-id="password_label">Enter the password to open this PDF file:</p>
+                    </div>
+                    <div class="row">
+                        <input type="password" id="password" class="toolbarField" />
+                    </div>
+                    <div class="buttonRow">
+                        <button id="passwordCancel" class="overlayButton"><span data-l10n-id="password_cancel">Cancel</span></button>
+                        <button id="passwordSubmit" class="overlayButton"><span data-l10n-id="password_ok">OK</span></button>
+                    </div>
+                </div>
+            </div>
+            <div id="documentPropertiesContainer" class="hidden">
+                <div class="doorHanger">
+                    <div class="row">
+                        <span data-l10n-id="document_properties_file_name">File name:</span> <p id="fileNameField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_file_size">File size:</span> <p id="fileSizeField">-</p>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_title">Title:</span> <p id="titleField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_author">Author:</span> <p id="authorField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_subject">Subject:</span> <p id="subjectField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_keywords">Keywords:</span> <p id="keywordsField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_creation_date">Creation Date:</span> <p id="creationDateField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_modification_date">Modification Date:</span> <p id="modificationDateField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_creator">Creator:</span> <p id="creatorField">-</p>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_producer">PDF Producer:</span> <p id="producerField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_version">PDF Version:</span> <p id="versionField">-</p>
+                    </div>
+                    <div class="row">
+                        <span data-l10n-id="document_properties_page_count">Page Count:</span> <p id="pageCountField">-</p>
+                    </div>
+                    <div class="buttonRow">
+                        <button id="documentPropertiesClose" class="overlayButton"><span data-l10n-id="document_properties_close">Close</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>  <!-- overlayContainer -->
+
+    </div> <!-- outerContainer -->
+    <div id="printContainer"></div>
+    <div id="mozPrintCallback-shim" hidden>
+        <style scoped>
+            .no-reader {
+                background: none;
+            }
+
+            #mozPrintCallback-shim {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                z-index: 9999999;
+                display: block;
+                text-align: center;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+                #mozPrintCallback-shim[hidden] {
+                    display: none;
+                }
+
+            @media print {
+                #mozPrintCallback-shim {
+                    display: none;
+                }
+            }
+
+            #mozPrintCallback-shim .mozPrintCallback-dialog-box {
+                display: inline-block;
+                margin: -50px auto 0;
+                position: relative;
+                top: 45%;
+                left: 0;
+                min-width: 220px;
+                max-width: 400px;
+                padding: 9px;
+                border: 1px solid hsla(0, 0%, 0%, .5);
+                border-radius: 2px;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+                background-color: #474747;
+                color: hsl(0, 0%, 85%);
+                font-size: 16px;
+                line-height: 20px;
+            }
+
+            #mozPrintCallback-shim .progress-row {
+                clear: both;
+                padding: 1em 0;
+            }
+
+            #mozPrintCallback-shim progress {
+                width: 100%;
+            }
+
+            #mozPrintCallback-shim .relative-progress {
+                clear: both;
+                float: right;
+            }
+
+            #mozPrintCallback-shim .progress-actions {
+                clear: both;
+            }
+        </style>
+        <div class="mozPrintCallback-dialog-box">
+            <!-- TODO: Localise the following strings -->
+            Preparing document for printing...
+            <div class="progress-row">
+                <progress value="0" max="100"></progress>
+                <span class="relative-progress">0%</span>
+            </div>
+            <div class="progress-actions">
+                <input type="button" value="Cancel" class="mozPrintCallback-cancel">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

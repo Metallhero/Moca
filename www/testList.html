@@ -79,7 +79,7 @@
      <script src="assets/scripts/charts.js"></script>   
    <script src="assets/scripts/table-advanced.js"></script> 
     <script type="text/javascript">
-       function sendEmail(testId) {
+       function sendEmail(testId,comment) {
            if(navigator.onLine){
                // window.location.href = 'mailto:iudith.m@zim.co.il?subject=my report&body=see attachment';
 
@@ -89,7 +89,11 @@
                               if(!$('#txtEmail').val()){
                                   alert('Please enter the email');
                               }else {
-                                  window.location = "result.html?id=" + testId + "#sendTo="+$('#txtEmail').val();
+                                  if(!comment){
+                                      window.location = "result.html?id=" + testId + "#sendTo="+$('#txtEmail').val();
+                                  }else {
+                                      window.location = "result.html?id=" + testId + "&comments=1#sendTo="+$('#txtEmail').val();
+                                  }
                               }
                               return false;
                           });        
@@ -144,7 +148,7 @@
                 
                $.when(
                     $.each(gridData, function(k,v) {
-                        $('#gridTable').append('<tr><td>' + v.chartNumber + '</td><td>' + v.Admin + '</td><td>' + v.Client + '</td><td>' + v.testDate + '</td><td><a href="result.html?id=' + v.testID + '">Results</a> | <a href="result.html?id=' + v.testID + '&comments=1">Results with comments</a></td><td><a href="#" onclick="sendEmail(' + v.testID + ');return false;">Send by email</a></td><td><a href="chartTest.html?id=' + v.testID + '">Chart</a></td>');
+                        $('#gridTable').append('<tr><td>' + v.chartNumber + '</td><td>' + v.Admin + '</td><td>' + v.Client + '</td><td>' + v.testDate + '</td><td><a href="result.html?id=' + v.testID + '">Results</a> | <a href="result.html?id=' + v.testID + '&comments=1">Results with comments</a></td><td><a href="#" onclick="sendEmail(' + v.testID + ');return false;">Results</a> | <a href="#" onclick="sendEmail(' + v.testID + ' ,true);return false;">Results with comments</a></td><td><a href="chartTest.html?id=' + v.testID + '">Chart</a></td>');
                     
 // <td><a href="chartTest.html?id=' + v.testID + '#file">Chart</a> | <a href="web/viewer.html?id=' + v.testID + '&comments=1#file">With comments</a> | <a href="web/viewer.html?id=' + v.testID + '#file">Without comments</a></td></tr>
 
@@ -329,7 +333,7 @@
                                             <th>Patient</th>
                                             <th>Date</th>
                                             <th>Result</th>
-                                            <th>Email</th>
+                                            <th>Send by email</th>
                                             <th>Chart</th>
 <!--                                             <th>PDF</th> -->
                                         </tr>

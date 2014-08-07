@@ -51,14 +51,21 @@
                 return time;
             }
             
+            var testId = getURLParameters(window.location.href).id;
+            var isComments = getURLParameters(window.location.href).comments;
             
             if (window.location.hash && window.location.hash.indexOf('#sendTo') != -1) {
-                $('#BackButton').remove();
+                if(!isComments){
+                    $('#BackButton').remove();
+                }else {
+                    $('#BackButton a').remove();
+                }
+                
                 setTimeout(function () {
-
+                    $('#Wrap').removeClass('vertical_table');
                     var pdfParams = {
                         'horizontal': [[-20, 5, 250, 260], [-20, 5, 250, 170]],
-                        'vertical': [[5, 5, 200, 260], [5, 5, 100, 100]],
+                        'vertical': [[5, 5, 200, 260], [5, 5, 200, 190]],
                     }, key = 'horizontal';
                     if ($(window).width() < 900) {
                         key = 'vertical';
@@ -115,11 +122,11 @@
                                             mess = 'Error';
                                         }
                                         $('#preload').remove();
-                                        $.session.set('SendMessageStatus', mess);
-                                        window.history.back();
+                                        // $.session.set('SendMessageStatus', mess);
+                                        // window.history.back();
                                     });
                                 }
-                            });
+                            });
 
                         }
                     });
@@ -191,8 +198,7 @@
 
             }
 
-            var testId = getURLParameters(window.location.href).id;
-            var isComments = getURLParameters(window.location.href).comments;
+            
             //If comments
             if (isComments) {
 
@@ -335,7 +341,7 @@
                         SetSum(result2.groupId, result2.testResult);
                         if (i == result.rows.length) {
                             $('#summAll').text(total);
-                            $('#timeAll').text(totalTime);
+                            $('#timeAll').text(totalTime.toString().toHHMMSS());
                         }
                         var groupTime = 0;
                         for (var y = 0; y < result2.testResult.length; y++) {
@@ -849,7 +855,7 @@
 
         </tfoot>
     </table>
-    <table style="border-spacing: 0;border: none;font-size: 11px;width: 80%;margin: 0 auto;max-width: 900px;">
+    <table style="border-spacing: 0;border: none;font-size: 11px;width: 100%;margin: 0 auto;">
         <tr id="BackButton">
             <td colspan="6">
                 <p style="font-size: 30px;text-decoration: underline;display: none;" id="commentTitle">Comments</p>

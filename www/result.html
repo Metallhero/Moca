@@ -39,7 +39,7 @@
         $(document).ready(function () {
             
             String.prototype.toHHMMSS = function () {
-                var sec_num = parseInt(this, 10); // don't forget the second param
+                var sec_num = parseInt(this, 10); 
                 var hours   = Math.floor(sec_num / 3600);
                 var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
                 var seconds = sec_num - (hours * 3600) - (minutes * 60);
@@ -60,7 +60,7 @@
                 }else {
                     $('#BackButton a').remove();
                 }
-                
+                log(isComments)
                 setTimeout(function () {
                     $('#Wrap').removeClass('vertical_table');
                     var pdfParams = {
@@ -86,6 +86,7 @@
                                     var srcCom = canCom.toDataURL("image/jpeg");
                                     doc.addImage(srcCom, 'JPEG', pdfParams[key][1][0], pdfParams[key][1][1], pdfParams[key][1][2], pdfParams[key][1][3]);
                                     var out = doc.output('base');
+                                    $('#BackButton').hide();
                                     $.ajax({
                                         type: "POST",
                                         url: "https://mandrillapp.com/api/1.0/messages/send.json",
@@ -123,14 +124,17 @@
                                         }
                                         $('#preload').remove();
                                         $.session.set('SendMessageStatus', mess);
-                                        window.history.back();                                    });
+                                        window.history.back();
+                                    });
                                 }
-                            });
+                            });
+
+
 
                         }
                     });
 
-                }, 1000);
+                }, 1000);
             } else if (window.location.hash && window.location.hash.indexOf('#file') != -1) {
                 $('#BackButton a').remove();
                 $('#BackButton').hide();
@@ -438,12 +442,16 @@
         });
 
     </script>
-
+<style type="text/css" media="screen">
+	table {
+	     max-width: 1000px;
+	}
+</style>
 </head>
 
 <body tabindex="1" style="" class="no-reader">
     <div class="Wrap" id="Wrap">
-    <table id="moca-table" style="border-spacing: 0;border: none;font-size: 11px;width: 100%;margin: 0 auto;display: none;">
+    <table id="moca-table" style="border-spacing: 0;border: none;font-size: 11px;width: 100%;margin: 0 auto;display: none; max-width: ">
         <thead>
             <tr style="border: none;padding: 0.1rem 0.2rem;">
                 <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"></th>
@@ -889,7 +897,7 @@
         }
         .vertical_table #moca-table + table {
             width: 114% !important;
-            max-width: 0;
+            max-width: none;
         }
     </style>
 

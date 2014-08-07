@@ -122,9 +122,8 @@
                                             mess = 'Error';
                                         }
                                         $('#preload').remove();
-                                        // $.session.set('SendMessageStatus', mess);
-                                        // window.history.back();
-                                    });
+                                        $.session.set('SendMessageStatus', mess);
+                                        window.history.back();                                    });
                                 }
                             });
 

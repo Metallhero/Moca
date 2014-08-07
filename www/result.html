@@ -294,6 +294,7 @@
                     var elemTimeId = "." + $(this).attr('id').replace("summResult", "summTime");
                     var id = elemId.split('_');
                     var item = $(this);
+                    var time = 0;
                     $.each(obj, function (k, v) {
                         var testType = v.testTypeID.toString();
 
@@ -303,19 +304,20 @@
                                 $("#test_3_1").text(resultSymbol);
                             }
                             var text = parseInt($(elemId).text()) || 0;
-                            var textTime = parseInt($(elemTimeId).text()) || 0;
+                       
 
                             text += v.score;
                             total += v.score;
-                            textTime += v.timeTest;
+
+                            time += v.timeTest;
                             totalTime += v.timeTest;
+
                             if (elemId != "#summResult_8_18"){ //no points
-                                $(elemId).text(text);
+                                $(elemId).text(time);
                             }
-                            log(textTime)              
-                                
-                            $(elemTimeId).text(textTime.toString().toHHMMSS());
                         }
+                       
+                        $(elemTimeId).text(time.toString().toHHMMSS());
                     });
                 });
 

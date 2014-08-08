@@ -231,37 +231,29 @@
                                 <div class="form-body">
                                     <div class="form-group last">
 
-                                        <div class="col-md-8">
+                                        <div class="col-md-12">
                                             <div class="row">
-                                                <div class="col-md-4 text-center pull-left" style="margin-bottom:20px;">
+                                                <div class="text-center pull-left" style="margin-bottom:20px;">
                                                     Draw clock (ten past eleven)  <br /><br />
-
                                                 </div>
-                                                <div class="col-md-8  text-center pull-right">
-                                                    <canvas id="visuoexec" class=""></canvas>
-                                                    <div class="row" id="tools">
-                                                        <div class="col-md-12 margin-top-10 text-center">
-                                                            <a href="#" onclick='$("#visuoexec").data("jqScribble").update({brush: BasicBrush,brushSize:2}); return false;' class="icon-btn">
-                                                                <i class="icon-pencil"></i>
-                                                                <div>Pencil</div>
-                                                            </a>
-                                                            <a href="#" onclick='$("#visuoexec").data("jqScribble").update({brush: Eraser,brushSize:20}); return false;' class="icon-btn">
-                                                                <i class="icon-eraser"></i>
-                                                                <div>Eraser</div>
-                                                            </a>
-                                                        </div>
+                                                <div class="row" id="tools">
+                                                    <div class="col-md-12 margin-top-10 text-center">
+                                                        <a href="#" onclick='$("#visuoexec").data("jqScribble").update({brush: BasicBrush,brushSize:2}); return false;' class="icon-btn">
+                                                            <i class="icon-pencil"></i>
+                                                            <div>Pencil</div>
+                                                        </a>
+                                                        <a href="#" onclick='$("#visuoexec").data("jqScribble").update({brush: Eraser,brushSize:20}); return false;' class="icon-btn">
+                                                            <i class="icon-eraser"></i>
+                                                            <div>Eraser</div>
+                                                        </a>
                                                     </div>
+                                                </div>
+                                                <div class="text-center canvas_wrap">
+                                                    <canvas id="visuoexec" class=""></canvas>
+                                                    
                                                 </div>
                                             </div>
 
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <button type="button" class="btn purple pull-right" data-toggle="modal"  data-target="#portlet-reload">
-                                                <i class="icon-arrow-right"></i>
-                                                Reset
-                                            </button>
                                         </div>
                                     </div>
 
@@ -294,11 +286,15 @@
                 </div>
             </div>
             <div class="row-fluid clearfix">
-                        <div class="col-md-6 pull-left">
+                        <div class="col-md-7 pull-left">
                             <button type="button" class="btn purple" onclick="PreviousPage()" id="btnBack"><i class="icon-chevron-left"></i></button>
                             <button type="button" class="btn purple" onclick="NextPage()" id="btnFoward"><i class="icon-chevron-right"></i></button>
+                            <button type="button" class="btn purple pull-left" data-toggle="modal" style="margin: 0 10px;"  data-target="#portlet-reload">
+                                <i class="icon-refresh"></i>
+                                Reset
+                            </button>
                         </div>
-                        <div class="col-md-6 pull-right">
+                        <div class="col-md-5 pull-right">
                             <button type="button" class="btn purple pull-right" id="btnContinue">
                                 <i class="icon-arrow-right"></i>
                                 Continue
@@ -312,5 +308,17 @@
 
 
 
+<style type="text/css" media="screen">
+    .canvas_wrap {
+        position: absolute;
+        right: 5px;
+        top: 115px;
+    }
+    #tools {
+        position: absolute;
+        top: 350px;
+
+    }
+</style>
 </body>
 </html>

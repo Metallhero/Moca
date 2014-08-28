@@ -10,16 +10,22 @@
     <script src="assets/scripts/phonegap-1.1.0.js"></script>
     <script src="assets/scripts/jquery.session.js"></script>
     <script src="assets/scripts/db.manager.js"></script>
+    <script type="text/javascript" src="assets/scripts/html2canvas.js"></script>
     <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.js"></script>
-    <script type="text/javascript" src="assets/scripts/jsPDF/adler32cs.js"></script>
+    
     <script type="text/javascript" src="assets/scripts/jsPDF/FileSaver.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/Blob.js"></script>
     <script type="text/javascript" src="assets/scripts/jsPDF/BlobBuilder.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/deflate.js"></script>
+    <script type="text/javascript" src="assets/scripts/jsPDF/adler32cs.js"></script>
+    
     <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.plugin.addimage.js"></script>
     <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.plugin.standard_fonts_metrics.js"></script>
     <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.plugin.split_text_to_size.js"></script>
     <script type="text/javascript" src="assets/scripts/jsPDF/base64.min.js"></script>
     <script type="text/javascript" src="assets/scripts/jsPDF/sprintf.js"></script>
     <script type="text/javascript" src="assets/scripts/jsPDF/jspdf.plugin.from_html.js"></script>
+    
     <style type="text/css" media="screen">
         #preload {
             display: block;
@@ -34,7 +40,7 @@
             background: url('img/ploader.gif') no-repeat center top;
         }
     </style>
-    <script type="text/javascript" src="assets/scripts/html2canvas.js"></script>
+    
     <script type="text/javascript">
         $(document).ready(function () {
             
@@ -148,26 +154,41 @@
                 setTimeout(function () {
                     $('#BackButton').hide();
                     $('#moca-table').show();
-                    html2canvas(document.body, {
+                    html2canvas($('#moca-table'), {
                         onrendered: function (can) {
-                            $('#moca-table').hide();
+
+                            //$('body').append($('<img>',{'src':can.toDataURL("image/png"),id:'tempimg'}));
+                            
+                            
+                           // window.location = can.toDataURL("image/jpeg");
+                            
+                            // $('#moca-table').hide();
                             var src = can.toDataURL("image/jpeg");
-                            var doc = new jsPDF();
-                            doc.addImage(src, 'JPEG', pdfParams[key][0][0], pdfParams[key][0][1], pdfParams[key][0][2], pdfParams[key][0][3]);
-                            doc.addPage();
-                            $('#BackButton').show();
-                            html2canvas(document.body, {
-                                onrendered: function (canCom) {
-                                    $('#BackButton').hide();
-                                    var srcCom = canCom.toDataURL("image/jpeg");
-                                    doc.addImage(srcCom, 'JPEG', pdfParams[key][1][0], pdfParams[key][1][1], pdfParams[key][1][2], pdfParams[key][1][3]);
-                                    $('#outerContainer').show();
-                                    $('table').hide();
-                                    $('body').removeClass('no-reader');
-                                    var resultPDF = convertDataURIToBinary(doc.output('dataurlstring'));
-                                    ReaderInit(resultPDF);
-                                }
-                            });
+                            var doc = new jsPDF('p', 'mm', [330, 240]);
+                                                        $('#tempimg').load(function() {
+                                console.log(doc);
+                                doc.addImage(src, 'JPEG', 0, 0);
+                                doc.save('fff.pdf');
+                            });
+                            
+                            
+                            // doc.addPage();
+                            // $('#BackButton').show();
+                            // html2canvas(document.body, {
+                                // onrendered: function (canCom) {
+                                    // $('#BackButton').hide();
+                                    // var srcCom = canCom.toDataURL("image/jpeg");
+                                    // doc.addImage(srcCom, 'JPEG', pdfParams[key][1][0], pdfParams[key][1][1], pdfParams[key][1][2], pdfParams[key][1][3]);
+                                    // $('#outerContainer').show();
+                                    // $('table').hide();
+                                    // $('body').removeClass('no-reader');
+                                    // var resultPDF = convertDataURIToBinary(doc.output('dataurlstring'));
+                                    // ReaderInit(resultPDF);
+                                // }
+                            // });
+                            
+                            
+                            
 
                         }
                     });
@@ -450,7 +471,7 @@
 
 <body tabindex="1" style="" class="no-reader">
     <div class="Wrap" id="Wrap">
-    <table id="moca-table" style="border-spacing: 0;border: none;font-size: 11px;width: 100%;margin: 0 auto;display: none; max-width: ">
+    <table id="moca-table" style="border-spacing: 0;border: none;font-size: 11px;width: 850px;margin: 0 auto;display: none;background: #fff; ">
         <thead>
             <tr style="border: none;padding: 0.1rem 0.2rem;">
                 <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"></th>

@@ -109,6 +109,89 @@
         <!-- END TOP NAVIGATION BAR -->
     </div>
     <div class="page-container">
+        <div class="page-sidebar-wrapper">
+            <div class="page-sidebar navbar-collapse collapse">
+                <ul data-slide-speed="200" data-auto-scroll="true" class="page-sidebar-menu">
+                    <li class="start ">
+                        <a href="javascript:;">
+                        <span class="title">VISUOSPATIAL / EXECUTIVE</span>
+                        <span class="selected"></span>
+                        <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a class="active" href="test_1_1.html">Trail</a>
+                            </li>
+                            <li>
+                                <a href="test_2_1.html">Cube</a>
+                            </li>
+                            <li>
+                                <a href="test_3_1.html">Clock</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="test_4_1.html">
+                        <span class="title">NAMING</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="test_5_1.html">
+                        <span class="title">MEMORY</span>
+                        </a>
+                    </li>
+                   <li>
+                        <a href="javascript:;">
+                        <span class="title">ATTENTION</span>
+                        <span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="test_6_1.html">Digit span-Forward</a>
+                            </li>
+                            <li>
+                                <a href="test_8_1.html">Letter A</a>
+                            </li>
+                            <li>
+                                <a href="test_9_1.html">Calculation</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                        <span class="title">LANGUAGE</span>
+                        <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="test_10_1.html">Repetition</a>
+                            </li>
+                            <li>
+                                <a href="test_11_1.html">Fluency</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="test_12_1.html">
+                        <span class="title">ABSTRACTION</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="test_13_1.html">
+                        <span class="title">DELAYED RECALL</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="test_14_1.html">
+                        <span class="title">ORIENTATION</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="page-content">
 
 
@@ -287,17 +370,13 @@
                     <div class="portlet">
                         <div class="portlet-title">
                             <div class="caption">Instructions:</div>
-                            <div class="tools"><a href="javascript:;" class="collapse"></a></div>
+                            <div class="tools"><a href="javascript:;" class="expand"></a></div>
                         </div>
-                        <div style="" class="portlet-body">
+                        <div style="display: block;" class="portlet-body">
                             <div class="slimScrollDiv">
                                 <div data-rail-visible="1">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p>The examiner gives the following instruction:</p><blockquote>
-                                                “I read some words to you earlier
-                                                , which I asked you to remember. Tell me as many of those words as you can remember.”
-                                            </blockquote>
                                             <p>Prompt the subject with the <b>semantic category cue</b> provided below for any word not recalled. </p>
                                             <p>FACE: part of the body</p>
                                             <p>VELVET: type of fabric</p>
@@ -340,7 +419,12 @@
         <!-- END PAGE -->
     </div>
 
-
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('.tools a').removeClass('collapse').addClass('expand');
+	});
+	
+</script>
 
 </body>
 </html>

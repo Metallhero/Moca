@@ -6,6 +6,25 @@ Based on http://getbootstrap.com/css/#responsive-utilities-classes
 /***
 Form Medium Devices Up To Large Devices
 ***/
+.header .navbar-toggle {display: inline-block !important;margin: 8px 6px 4px 6px;}
+.header {padding: 0 20px 0 20px;}
+.page-sidebar.navbar-collapse.collapse {
+    display: none !important;
+}
+.page-sidebar {
+    padding: 0 !important;
+width: 100%;
+margin: 0 !important;}
+.page-sidebar ul {
+    margin-top: 0px;
+width: 100%;
+}
+.navbar-collapse {
+    max-height: none !important;
+}
+.header .navbar-nav > li.dropdown.user .dropdown-toggle {
+    margin-top: 4px;
+}
 
 @media (min-width: 992px) and (max-width: 1200px) {  
 
@@ -25,8 +44,8 @@ From Medium Devices Up To Larger Devices
  	Page sidebar
  	***/
  	.page-sidebar {
-		position: absolute;
- 		width: 225px;
+/*		position: absolute;*/
+/* 		width: 225px;*/
   	}
 
   	.page-sidebar.navbar-collapse {
@@ -168,7 +187,7 @@ From Medium Devices Up To Larger Devices
 Up To Medium Devices
 ***/
 
-@media (max-width:991px) { 
+
 	
 	/***
  	Page header
@@ -304,7 +323,7 @@ Up To Medium Devices
  		padding: 0 !important;
  	}
 
-}
+
 
 /***
 From Small Devices Up To Medium Devices

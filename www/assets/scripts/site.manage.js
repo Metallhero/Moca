@@ -101,6 +101,8 @@ function getURLParameters(url) {
     return result;
 }
 function getTestResultSymbol(valueResult) {
+    if (valueResult == null)
+        return "";
     return valueResult ? "✔" : 'x';
 }
 

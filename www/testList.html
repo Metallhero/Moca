@@ -148,7 +148,7 @@
                 
                $.when(
                     $.each(gridData, function(k,v) {
-                        $('#gridTable').append('<tr><td>' + v.chartNumber + '</td><td>' + v.Admin + '</td><td>' + v.Client + '</td><td>' + v.testDate + '</td><td><a href="result.html?id=' + v.testID + '">Results</a> | <a href="result.html?id=' + v.testID + '&comments=1">Results with comments</a></td><td><a href="#" onclick="sendEmail(' + v.testID + ');return false;">Results</a> | <a href="#" onclick="sendEmail(' + v.testID + ' ,true);return false;">Results with comments</a></td></tr>');
+                        $('#gridTable').append('<tr><td>' + v.chartNumber + '</td><td>' + v.Admin + '</td><td>' + v.Client + '</td><td>' + v.testDate + '</td><td><a href="result.html?id=' + v.testID + '&comments=1">Results</a></td><td> <a href="#" onclick="sendEmail(' + v.testID + ' ,true);return false;">Results</a></td></tr>');
                     
 // <td><a href="chartTest.html?id=' + v.testID + '">Chart</a></td><td><a href="chartTest.html?id=' + v.testID + '#file">Chart</a> | <a href="web/viewer.html?id=' + v.testID + '&comments=1#file">With comments</a> | <a href="web/viewer.html?id=' + v.testID + '#file">Without comments</a></td>
 

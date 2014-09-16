@@ -28,7 +28,6 @@ function NextLocation(maxStep) {
  
 $(document).ready(function () {
     $("#btnContinue").click(function () {
-        console.log('sd');
         $.session.set('historyCounter',0);
     });
 

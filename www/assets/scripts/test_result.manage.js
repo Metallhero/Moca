@@ -48,11 +48,20 @@ function LoadPreviousResult(data) {
     var mocaResult = data.MocaTestResults.data[0];
     var mocaResultValues = data.MocaTestResultsValues.data;
 
-
+    log(mocaResult);
     if (mocaResult.testTypeID == 7) { //11words
         $('.timeBlock').show();
         $("#timerInfoBlock").remove();
         $(".spinner").hide();
+        $("#TB_Note").attr('disabled', 'disabled');
+        DB.selectData("Select * From MocaComments Where testID = " + mocaResult.testID + " And testTypeID = 7", function (result) {
+            var comment = result.rows.item(0);
+            log(comment);
+            if(comment)
+            {
+                $("#TB_Note").val(comment.comment);
+            }
+        });
     }
     else if (mocaResult.testTypeID == 4) {//100,93,86 test
         $.each(mocaResultValues, function (index, value) {
@@ -250,11 +259,12 @@ function StartTimer() {
 $(function () {
     function SaveComments(testId, testType) {
         DB.deleteData(DB.DeleteCommentQuery(testId, testType), function () { //if drow img
-            if ($("#cvs_note").data("jqScribble").blank == false) {
+            if ($("#cvs_note").length>0&& $("#cvs_note").data("jqScribble").blank == false) {
                 $("#cvs_note").data("jqScribble").save(function (imageData) {
                     if (imageData != '' && imageData != 'data:,') {
                         var testId = $.session.get('testId');
                         var comment = $("#TB_Note").val();
+                       
                         var mocaComment =
                          {
                              tableName: 'MocaComments',
@@ -274,6 +284,8 @@ $(function () {
             }
             else if ($("#TB_Note").val() != '') { //if not drow img but fill textarea
                 var comment = $("#TB_Note").val();
+            
+                
                 var mocaComment =
                  {
                      tableName: 'MocaComments',
@@ -283,6 +295,7 @@ $(function () {
                          comment: comment
                      }]
                  };
+                log(mocaComment);
                 DB.insertData(mocaComment, function (data) {
                     NextLocation(GetMaxStep(testType));
                 });
@@ -329,7 +342,7 @@ $(function () {
         var ResultValues = [];
         if (DB.GetTestType() == 7) //11 words
         {
-            SaveImage();
+            //SaveImage();
             var val = { valueResult: parseInt($("#score").text()), valueOptional: $("#tbx1").val() };
             ResultValues.push(val);
         }

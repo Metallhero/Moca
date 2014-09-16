@@ -6,7 +6,6 @@
     <meta content="width=device-width, initial-scale=1.0,user-scalable=no" name="viewport" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-
     <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
@@ -41,7 +40,6 @@
     <link href="assets/css/boxwell.css" rel="stylesheet" type="text/css" />
     <!-- END BOXWELL STYLE -->
     <link rel="shortcut icon" href="../favicon.ico" />
-
     <script src="assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="assets/scripts/jquery.jqscribble.js" type="text/javascript"></script>
@@ -62,22 +60,24 @@
 
             $('#spinner1').spinner({ value: 0, min: 0 });
 
-            $("#visuoexec").jqScribble();
-            $(window).on('orientationchange', function (event) {
-                $("#visuoexec").width($("#visuoexec").closest('div').width());
-            });
-            $("#visuoexec").data("jqScribble").update({
-                width: $("#visuoexec").closest('div').width(),
-                height: 400,
-                brushSize: 2,
-                backgroundColor: 'rgba(255,255,255,0)'
-            });
+            //$("#visuoexec").jqScribble();
+            //$(window).on('orientationchange', function (event) {
+            //    $("#visuoexec").width($("#visuoexec").closest('div').width());
+            //});
+            //$("#visuoexec").data("jqScribble").update({
+            //    width: $("#visuoexec").closest('div').width(),
+            //    height: 400,
+            //    brushSize: 2,
+            //    backgroundColor: 'rgba(255,255,255,0)'
+            //});
         });
     </script>
-
     <style>
-        canvas {
-            border: 1px solid red;
+        #TB_Note {
+            font-size: 18px;
+            height: 400px;
+            resize: none;
+            width: 100%;
         }
     </style>
 </head>
@@ -93,7 +93,7 @@
                     Are you sure ?
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn" runat="server" id="btnReset"><i class="icon-ok"></i> Confirm</button>
+                    <button type="submit" class="btn" id="btnReset"><i class="icon-ok"></i> Confirm</button>
                     <button type="button" class="btn default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -145,9 +145,9 @@
                 <ul data-slide-speed="200" data-auto-scroll="true" class="page-sidebar-menu">
                     <li class="start ">
                         <a href="javascript:;">
-                        <span class="title">VISUOSPATIAL / EXECUTIVE</span>
-                        <span class="selected"></span>
-                        <span class="arrow"></span>
+                            <span class="title">VISUOSPATIAL / EXECUTIVE</span>
+                            <span class="selected"></span>
+                            <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
                             <li>
@@ -159,23 +159,23 @@
                             <li>
                                 <a href="test_3_1.html">Clock</a>
                             </li>
-                            
+
                         </ul>
                     </li>
                     <li>
                         <a href="test_4_1.html">
-                        <span class="title">NAMING</span>
+                            <span class="title">NAMING</span>
                         </a>
                     </li>
                     <li>
                         <a href="test_5_1.html">
-                        <span class="title">MEMORY</span>
+                            <span class="title">MEMORY</span>
                         </a>
                     </li>
-                   <li>
+                    <li>
                         <a href="javascript:;">
-                        <span class="title">ATTENTION</span>
-                        <span class="arrow "></span>
+                            <span class="title">ATTENTION</span>
+                            <span class="arrow "></span>
                         </a>
                         <ul class="sub-menu">
                             <li>
@@ -190,13 +190,13 @@
                             <li>
                                 <a href="test_9_1.html">Calculation</a>
                             </li>
-                            
+
                         </ul>
                     </li>
                     <li class="active">
                         <a href="javascript:;">
-                        <span class="title">LANGUAGE</span>
-                        <span class="arrow open"></span>
+                            <span class="title">LANGUAGE</span>
+                            <span class="arrow open"></span>
                         </a>
                         <ul class="sub-menu">
                             <li>
@@ -205,29 +205,28 @@
                             <li>
                                 <a href="test_11_1.html">Fluency</a>
                             </li>
-                            
+
                         </ul>
                     </li>
                     <li>
                         <a href="test_12_1.html">
-                        <span class="title">ABSTRACTION</span>
+                            <span class="title">ABSTRACTION</span>
                         </a>
                     </li>
                     <li>
                         <a href="test_13_1.html">
-                        <span class="title">DELAYED RECALL</span>
+                            <span class="title">DELAYED RECALL</span>
                         </a>
                     </li>
                     <li>
                         <a href="test_14_1.html">
-                        <span class="title">ORIENTATION</span>
+                            <span class="title">ORIENTATION</span>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="page-content">
-
             <div class="row-fluid">
                 <div class="col-md-12">
                     <!-- BEGIN PAGE TITLE & BREADCRUMB-->
@@ -254,7 +253,6 @@
                             <div class="">
                                 <div class="form-body">
 
-
                                     <div class="form-group last clearfix">
                                         <div class="col-md-4">
                                             <div class="timeBlock" style="display:none;float:left;margin-right: 10px;">
@@ -266,7 +264,6 @@
                                                 <span id="score" class="badge">0</span>
                                             </div>
                                             <div class="clearfix"></div><br />
-
                                             <p>
                                                 Fluency / Name maximum number of words in one minute that begin with the letter F
                                             </p>
@@ -288,21 +285,21 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        
+
                                                     </div>
                                                     <div id="timerInfoBlock" class="col-md-6" style="text-align: center;float: right;margin: 0;padding: 0;width: 160px;">
-                                                            <span class="help-block">(N >= 11 words)</span>
-        
-                                                            <div class="timer ">
-                                                                <span id="up_Timer">
-                                                                    <i class="icon-bell"></i>
-                                                                    PLEASE STOP
-        
-                                                                </span>
-                                                            </div>
+                                                        <span class="help-block">(N >= 11 words)</span>
+
+                                                        <div class="timer ">
+                                                            <span id="up_Timer">
+                                                                <i class="icon-bell"></i>
+                                                                PLEASE STOP
+
+                                                            </span>
                                                         </div>
+                                                    </div>
                                                 </div>
-                                                
+
                                             </div>
                                         </div>
                                         <div class="clearfix"></div><br />
@@ -310,7 +307,8 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     Record the subject's response in box below<br />
-                                                    <canvas id="visuoexec" class="form-note cnvs_word"></canvas>
+                                                    <textarea id="TB_Note" placeholder="Record the subject's response here"></textarea>
+                                                    <!--<canvas id="visuoexec" class="form-note cnvs_word"></canvas>
                                                     <div class="row" id="tools">
                                                         <div class="col-md-12 margin-top-10 text-center">
                                                             <a href="#" onclick='$("#visuoexec").data("jqScribble").update({brush: BasicBrush,brushSize:2}); return false;' class="icon-btn">
@@ -322,11 +320,10 @@
                                                                 <div>Eraser</div>
                                                             </a>
                                                         </div>
-                                                    </div>
+                                                    </div>-->
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
@@ -345,7 +342,6 @@
                 <!-- END PORTLET-->
                 <div class="col-md-4">
                     <!-- BEGIN PORTLET-->
-
                     <div class="portlet">
                         <div class="portlet-title">
                             <div class="caption">Instructions:</div>
@@ -368,33 +364,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="portlet">
-                        <!--<div class="portlet-title">
-                            <div class="caption">Comment</div>
-                            <div class="tools"><a class="expand" href="javascript:;"></a></div>
-                        </div>-->
-                        <div class="portlet-body" style="display: none;">
-                            <div class="scroller">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <ul class="nav nav-tabs">
-                                            <li class="active"><a href="#tab_1_1" data-toggle="tab"><i class="icon-italic"></i></a></li>
-                                            <li class=""><a href="#tab_1_2" data-toggle="tab"><i class="icon-edit"></i></a></li>
 
-                                        </ul>
-                                        <div class="tab-content">
-                                            <div class="tab-pane fade active in" id="tab_1_1">
-                                                <textarea name="" rows="6" cols="6" id="TB_Note" class="form-control"></textarea>
-                                            </div>
-                                            <div class="tab-pane fade" id="tab_1_2">
-                                                <canvas id="cvs_note" class="form-note"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="row-fluid clearfix">
@@ -414,13 +384,13 @@
         <!-- END PAGE -->
     </div>
     <script type="text/javascript" charset="utf-8">
-        $("#cvs_note").jqScribble();
-        $("#cvs_note").data("jqScribble").update({
-            brushSize: 2,
-            width: 285,
-            height: 285,
-            backgroundColor: 'rgba(255,255,255,0)'
-        });
+        //$("#cvs_note").jqScribble();
+        //$("#cvs_note").data("jqScribble").update({
+        //    brushSize: 2,
+        //    width: 285,
+        //    height: 285,
+        //    backgroundColor: 'rgba(255,255,255,0)'
+        //});
     </script>
 </body>
 </html>

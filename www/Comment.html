@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300,700italic' rel='stylesheet' type='text/css'>
+    <link href="Content/style-mectronic.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <script src="Scripts/modernizr-2.6.2.js"></script>
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/respond.js"></script>
+    <script src="Scripts/jquery.session.js"></script>
+    <link href="Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="Content/style-responsive.css" rel="stylesheet" />
+    <link href="Content/default.css" rel="stylesheet" />
+    <!--@*Select2*@-->
+    <link href="Scripts/select2/select2_metro.css" rel="stylesheet" />
+    <script src="Scripts/select2/select2.min.js"></script>
+    <!--=======-->
+    <script src="Scripts/jquery.bpopup.min.js"></script>
+
+    <!--@*Bootstrap switch*@-->
+    <link href="Content/bootstrap-switch/bootstrap-switch.css" rel="stylesheet" />
+    <script src="Content/bootstrap-switch/bootstrap-switch.min.js"></script>
+    <!--@*===============*@-->
+    <script src="Scripts/js/db.manager.js"></script>
+    <script src="/Scripts/js/site.manage.js"></script>
+
+
+
+</head>
+<body class="login">
+    <!--section Popup -->
+    <div id="popups"></div>
+    <!--section end -->
+    <div class="header navbar navbar-inverse ">
+        <div class="header-inner">
+            <a href="/" class="navbar-brand">
+                <span>e-MoCA version 8.1</span>
+            </a>
+
+            <a data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" href="javascript:;">
+                <img alt="" src="Content/img/sidebar-toggler.jpg">
+            </a>
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <li class="user">
+                    <a data-close-others="true" data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" href="#" style="padding-top:10px;padding-bottom:10px;">
+                        <span class="username">
+                            <!--Username-->
+                        </span>
+                        <i class="icon-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu"><li><a href="/">Start new test</a></li><li><a href="/Test/List">Show test results</a></li></ul>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="content">
+        <div class="page-container">
+            <!--Navigation Bar -->
+            <div id="navigationBar"></div>
+            <!-- -->
+            <div class="page-content">
+                <!-- BEGIN PAGE HEADER-->
+                <div class="row-fluid">
+                    <div class="col-md-12">
+                        <h3 class="page-title">
+                            e-MoCA version 8.1
+                        </h3>
+                    </div>
+                </div>
+                <!-- END PAGE HEADER-->
+                <div class="row-fluid">
+                    <div class="col-md-12">
+                        <!-- BEGIN PORTLET-->
+                        <div class="portlet box blue">
+                            <div class="portlet-title">
+                                <div class="caption">Comment</div>
+                                <div class="tools"><!--a class="expand" href="javascript:;"></a--></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="scroller" style="height:520px" data-rail-visible="1">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="nav nav-tabs">
+                                                <li class="active"><a href="#tab_1_1" data-toggle="tab"><i class="icon-italic"></i></a></li>
+                                                <li class=""><a href="#tab_1_2" data-toggle="tab"><i class="icon-edit"></i></a></li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="tab_1_1">
+                                                    <textarea class="form-control" id="TB_Note" style="height:300px" cols="6" rows="6" name=""></textarea>
+                                                </div>
+                                                <div class="tab-pane" id="tab_1_2">
+                                                    <canvas id="cvs_note" class="form-note"></canvas>
+                                                    <div class="row" id="tools" style="position:static;">
+                                                        <div class="col-md-6 margin-top-10 text-left">
+                                                            <a href="#" onclick='$("#cvs_note").data("jqScribble").update({ brush: BasicBrush, brushSize: 2 }); return false;' class="icon-btn">
+                                                                <i class="icon-pencil"></i>
+                                                                <div>Pencil</div>
+                                                            </a>
+                                                            <a href="#" onclick='$("#cvs_note").data("jqScribble").update({ brush: Eraser, brushSize: 40 }); return false;' class="icon-btn">
+                                                                <i class="icon-eraser"></i>
+                                                                <div>Eraser</div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- END PORTLET-->
+                    </div>
+
+                </div>
+
+                <div class="row-fluid clearfix">
+                    <div class="col-md-7 pull-left">
+                        <button type="button" class="btn blue pull-left" onclick="PreviousPage()" id="btnBack">
+                            <i class="icon-chevron-left"></i>
+                        </button>
+                        <button type="button" class="btn blue pull-left" style="margin: 0 10px;" onclick="ShowConfirmPopup('Reset confirmation', 'Are you sure ?', 'ResetTest()')">
+                            <i class="icon-refresh"></i>
+                            Reset
+                        </button>
+                        <button type="button" class="btn blue pull-left" onclick="NextPage()" id="btnFoward">
+                            <i class="icon-chevron-right"></i>
+                        </button>
+                        <button type="button" class="btn blue pull-left" style="margin: 0 10px;" onclick="ShowConfirmPopup('Start new test', 'Are you sure ?', 'Index.html')"><i class="icon-arrow-left"></i> Start new test</button>
+                        <button type="button" class="btn blue pull-left" onclick="ShowConfirmPopup('Show test results', 'Are you sure ?', 'testList.html')"><i class="icon-arrow-right"></i> Show test results</button>
+                    </div>
+                    <div class="col-md-5 pull-right">
+                        <button type="button" class="btn blue pull-right"  id="btnContinue">
+                            <i class="icon-arrow-right"></i>
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- END PAGE CONTENT-->
+
+        </div>
+
+
+    </div>
+
+    <div class="footer">
+        <div class="copyright"> e-MoCA © Copyright 2014. </div>
+        <div class="footer-tools">
+            <span class="go-top">
+                <i class="icon-angle-up"></i>
+            </span>
+        </div>
+    </div>
+
+
+
+    <!--section Scripts -->
+    <script src="Scripts/jqscribble/jquery.jqscribble.js"></script>
+    <script src="Scripts/jqscribble/jqscribble.extrabrushes.js"></script>
+    <script src="Scripts/js/test_result.manage.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#cvs_note").jqScribble();
+            $("#cvs_note").data("jqScribble").update({
+                brushSize: 2,
+                width: $(".tab-content").width(),
+                height: 350,
+                backgroundColor: 'rgba(255,255,255,0)'
+            });
+
+            $('#btnContinue').on('click', function () {
+                var imgData = "";
+                try {
+                    $("#cvs_note").data("jqScribble").save(function (imageData) {
+                        imgData = imageData;
+                    });
+                } catch (e) {
+                }
+
+                var updateTestResult = {
+                    tableName: 'MocaTest',
+                    data: [{
+                        "commentResult": $("#TB_Note").val(),
+                        "imageResult": imgData
+                    }],
+                    Where: "Where testID=" + $.session.get('testId')
+                };
+
+                DB.updateData(updateTestResult, function () {
+                    window.location = 'testList.html';
+                });
+                return false;
+            });
+        });
+
+    </script>
+    <!-- end section-->
+</body>
+</html>

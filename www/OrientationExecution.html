@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300,700italic' rel='stylesheet' type='text/css'>
+    <link href="Content/style-mectronic.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <script src="Scripts/modernizr-2.6.2.js"></script>
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/respond.js"></script>
+    <script src="Scripts/jquery.session.js"></script>
+    <link href="Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="Content/style-responsive.css" rel="stylesheet" />
+    <link href="Content/default.css" rel="stylesheet" />
+    <!--@*Select2*@-->
+    <link href="Scripts/select2/select2_metro.css" rel="stylesheet" />
+    <script src="Scripts/select2/select2.min.js"></script>
+    <!--=======-->
+    <script src="Scripts/jquery.bpopup.min.js"></script>
+
+    <!--@*Bootstrap switch*@-->
+    <link href="Content/bootstrap-switch/bootstrap-switch.css" rel="stylesheet" />
+    <script src="Content/bootstrap-switch/bootstrap-switch.min.js"></script>
+    <!--@*===============*@-->
+    <script src="Scripts/js/db.manager.js"></script>
+    <script src="/Scripts/js/site.manage.js"></script>
+
+
+
+</head>
+<body class="login">
+    <!--section Popup -->
+    <div id="popups"></div>
+    <!--section end -->
+    <div class="header navbar navbar-inverse ">
+        <div class="header-inner">
+            <a href="/" class="navbar-brand">
+                <span>e-MoCA version 8.1</span>
+            </a>
+
+            <a data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" href="javascript:;">
+                <img alt="" src="Content/img/sidebar-toggler.jpg">
+            </a>
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <li class="user">
+                    <a data-close-others="true" data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" href="#" style="padding-top:10px;padding-bottom:10px;">
+                        <span class="username">
+                            <!--Username-->
+                        </span>
+                        <i class="icon-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu"><li><a href="/">Start new test</a></li><li><a href="/Test/List">Show test results</a></li></ul>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="content">
+        <div class="page-container">
+            <!--Navigation Bar -->
+            <div id="navigationBar"></div>
+            <!-- -->
+            <div class="page-content">
+
+                <div class="row-fluid">
+                    <div class="col-md-12">
+
+                        <h3 class="page-title">
+                            Orientation
+                        </h3>
+
+                    </div>
+                </div>
+                <!-- END PAGE HEADER-->
+                <div class="row-fluid clearfix">
+                    <div class="col-md-8">
+                        <!-- BEGIN PORTLET-->
+                        <div class="portlet box purple">
+                            <div class="portlet-title">
+                                <div class="caption">Execution and Scoring</div>
+                                <div class="tools">
+                                </div>
+                            </div>
+                            <div class="portlet-body form">
+                                <!-- BEGIN FORM-->
+                                <div class="form-horizontal ">
+                                    <div class="form-body"> 
+                                        <!--ScoreTime Block-->
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="scoreBlock col-md-1" style="margin-left:20px">
+                                                    Score:
+                                                    <span id="score" class="badge">0</span>
+                                                </div>
+                                                <div class="timeBlock col-md-1" style="margin-left:20px">
+                                                    Time:
+                                                    <span id="timeBlock" class="badge">0</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!--  end ScoreTime    -->
+                                        <div class="clearfix"></div><br />
+
+                                        <div class="row-fluid">
+                                            <div class="col-md-6">
+                                                <p>Please put a check mark for each correct item.</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <blockquote>“Tell me the date today”</blockquote>
+                                            </div>
+
+                                        </div>
+                                        <div class="row-fluid">
+                                            <div class="col-md-6">
+                                                <p>If the subject does not give a complete answer, then prompt accordingly by saying:</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <blockquote>“Tell me the [year, month, exact date, and day of the week].”</blockquote>
+                                            </div>
+
+                                        </div>
+                                        <div class="row-fluid">
+                                            <div class="col-md-6">
+                                                <p>Then say:</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <blockquote>“Now, tell me the name of this place, and which city it is in.”</blockquote>
+                                            </div>
+
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="row-fluid">
+                                            <div class="col-md-12">
+                                                <div class="table">
+                                                    <table class="table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" class="toggle" id="cbx1" />
+                                                                </td>
+                                                                <td>Date</td>
+                                                            </tr>
+                                                            <tr>
+
+                                                                <td>
+                                                                    <input type="checkbox" class="toggle" id="cbx2" />
+                                                                </td>
+                                                                <td>Month</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" class="toggle" id="cbx3" />
+                                                                </td>
+                                                                <td>Year</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" class="toggle" id="cbx4" />
+                                                                </td>
+                                                                <td>Day</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" class="toggle" id="cbx5" />
+                                                                </td>
+                                                                <td>Place</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="checkbox" class="toggle" id="cbx6" />
+                                                                </td>
+                                                                <td>City</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END FORM-->
+                    </div>
+                    <!-- END PORTLET-->
+                    <div class="col-md-4">
+
+                        <div class="portlet">
+                            <div class="portlet-title">
+                                <div class="caption">Scoring:</div>
+                                <div class="tools"><a href="javascript:;" class="collapse"></a></div>
+                            </div>
+                            <div style="display:block" class="portlet-body">
+                                <div class="slimScrollDiv">
+                                    <div data-rail-visible="1">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <p>
+                                                    Give one point for each item correctly answered. The subject must tell the exact date and the
+                                                    exact place (name of hospital, clinic, office). No points are allocated if subject makes an error of one day for the day and date.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div><div class="slimScrollBar" style="background: none repeat scroll 0% 0% rgb(161, 178, 189); width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 350px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: none repeat scroll 0% 0% rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row-fluid clearfix">
+                    <div class="row-fluid clearfix">
+                        <div class="col-md-7 pull-left">
+                            <button type="button" class="btn purple pull-left" onclick="PreviousPage()" id="btnBack">
+                                <i class="icon-chevron-left"></i>
+                            </button>
+
+                            <button type="button" class="btn purple pull-left" onclick="NextPage()" id="btnFoward">
+                                <i class="icon-chevron-right"></i>
+                            </button>
+                            <button type="button" class="btn purple pull-left" style="margin: 0 10px;" onclick="ShowConfirmPopup('Start new test', 'Are you sure ?', 'Index.html')"><i class="icon-arrow-left"></i> Start new test</button>
+                            <button type="button" class="btn purple pull-left" onclick="ShowConfirmPopup('Show test results', 'Are you sure ?', 'testList.html')"><i class="icon-arrow-right"></i> Show test results</button>
+                        </div>
+                        <div class="col-md-5 pull-right">
+                            <button type="button" class="btn purple pull-right" onclick="SaveTest()" id="btnContinue">
+                                <i class="icon-arrow-right"></i>
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PAGE CONTENT-->
+            </div>
+       
+            <!-- END PAGE -->
+        </div>
+
+
+    </div>
+
+    <div class="footer">
+        <div class="copyright"> e-MoCA © Copyright 2014. </div>
+        <div class="footer-tools">
+            <span class="go-top">
+                <i class="icon-angle-up"></i>
+            </span>
+        </div>
+    </div>
+
+
+
+    <!--section Scripts -->
+    <script src="Scripts/js/test_result.manage.js"></script>
+    <!-- end section-->
+</body>
+</html>

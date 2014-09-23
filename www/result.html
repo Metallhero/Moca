@@ -1,0 +1,524 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300,700italic' rel='stylesheet' type='text/css'>
+    <link href="Content/style-mectronic.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <script src="Scripts/modernizr-2.6.2.js"></script>
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/respond.js"></script>
+    <script src="Scripts/jquery.session.js"></script>
+    <link href="Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="Content/style-responsive.css" rel="stylesheet" />
+    <link href="Content/default.css" rel="stylesheet" />
+    <!--@*Select2*@-->
+    <link href="Scripts/select2/select2_metro.css" rel="stylesheet" />
+    <script src="Scripts/select2/select2.min.js"></script>
+    <!--=======-->
+    <script src="Scripts/jquery.bpopup.min.js"></script>
+
+    <!--@*Bootstrap switch*@-->
+    <link href="Content/bootstrap-switch/bootstrap-switch.css" rel="stylesheet" />
+    <script src="Content/bootstrap-switch/bootstrap-switch.min.js"></script>
+    <!--@*===============*@-->
+    <script src="Scripts/js/db.manager.js"></script>
+    <script src="/Scripts/js/site.manage.js"></script>
+
+
+
+</head>
+<body class="login">
+    <!--section Popup -->
+    <div id="popups"></div>
+    <!--section end -->
+    <div class="header navbar navbar-inverse ">
+        <div class="header-inner">
+            <a href="/" class="navbar-brand">
+                <span>e-MoCA version 8.1</span>
+            </a>
+
+            <a data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" href="javascript:;">
+                <img alt="" src="Content/img/sidebar-toggler.jpg">
+            </a>
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <li class="user">
+                    <a data-close-others="true" data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" href="#" style="padding-top:10px;padding-bottom:10px;">
+                        <span class="username">
+                            <!--Username-->
+                        </span>
+                        <i class="icon-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu"><li><a href="/">Start new test</a></li><li><a href="testList.html">Show test results</a></li></ul>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="content">
+        <div class="Wrap" id="Wrap">
+            <table id="moca-table" style="border-spacing: 0;border: none;font-size: 11px;width: 850px;margin: 0 auto;background: #fff; ">
+                <thead>
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">NAME :</span></th>
+                        <th colspan="4" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;">
+                            <label>
+                                <span id="patient_name"></span>
+                            </label>
+                        </th>
+                    </tr>
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="text-transform: uppercase;font-size: 1.3em;font-weight: 700;">Montreal cognitive assessment (MOCA)</span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">Education :</span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span id="patient_education"></span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">Date of birth :</span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span id="patient_dateOfBirth"></span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"></th>
+                    </tr>
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <th style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;font-size:1.5em;">Version 8.1 Original Version</th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">Sex :</span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span id="patient_gender"></span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span style="float: right;font-weight: 700;font-size: 13px;">DATE :</span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"><span id="test_date"></span></th>
+                        <th colspan="1" style="border: none;padding: 0.2em;font-weight: normal;vertical-align: middle;text-align: left;"></th>
+                    </tr>
+                </thead>
+                <tbody style="border-spacing: 0;border: none;border-collapse:collapse;">
+                    <!--     VISUOSPATIAL / EXECUTIVE   -->
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="3" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative; -webkit-border-radius: 12px 0 0 0;border-radius: 12px 0 0 0; -moz-border-radius:12px 0 0 0;border-bottom:0;border-right:0;">
+                            <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:700;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -5px;-webkit-border-radius: 12px 0 0 0;border-radius: 12px 0 0 0; -moz-border-radius:12px 0 0 0;">Visuospatial / Executive</span></div>
+                            <div style="float: left;margin: 40px 20px 20px 20px; ">
+                                <img src="" id="testImg_13" alt="" style="background: url('Content/img/visuo-1_rev.png'); display: block;-webkit-transform: rotate(-180deg);background-size: 215px;" width="215" height="210" title="" />
+                                <div style="position: relative;">
+                                    <div style="bottom: 0;margin: 0 0 20px 200px;position: absolute;top: -15px;">
+                                        <label style="font-size: 15px;">[ <span id="test_13_1"></span> ]</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="float: right;margin: 5px 0 0 0px;position:relative;">
+                                <img src="Content/img/visuo-2.png" alt="" width="103" style="border: 0;margin: 0 0 0 45px;" title="" />
+                                <span style="position:absolute;right:19px;font-size:1.2em;">Copy<br />cube</span>
+                                <div style="position: relative;">
+                                    <img src="" alt="" id="testImg_14" width="220" height="155" style="border: 0; display: block;-webkit-transform: rotate(-180deg);" title="" />
+                                    <div style="position: absolute;bottom: 0;margin: 0 0 20px 180px;top: 140px;">
+                                        <label style="font-size: 15px;">[ <span id="test_14_1"></span> ]</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="2" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <span style="padding:5px 0 0 10px;display:block;font-size:1.2em;">Draw CLOCK (Ten past eleven)<br />(3 points)</span>
+                            <br />  <img src="" id="testImg_15" alt="" width="225" height="250" style="border: 0; display: block;-webkit-transform: rotate(-180deg);position: relative;top: -35px;" title="" />
+                            <div style="position: relative;">
+                                <div style="position: absolute;top: -40px;">
+                                    <div style="float: left;margin: 0 10px;text-align: center;font-size: 13px;">
+                                        <label style="font-size: 15px;">[ <span id="test_15_1"></span> ]</label><br /><span style="">Contour</span>
+                                    </div>
+                                    <div style="float: left;margin: 0 10px;text-align: center;font-size: 13px;">
+                                        <label style="font-size: 15px;">[ <span id="test_15_2"></span> ]</label><br /><span style="">Numbers</span>
+                                    </div>
+                                    <div style="float: left;margin: 0 10px;text-align: center;font-size: 13px;">
+                                        <label style="font-size: 15px;">[ <span id="test_15_3"></span> ]</label><br /><span style="">Hands</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="1" style="width:50px; border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <div style="width: 100%;"><span style="background: #000;width: 100%;color: #fff;font-size: 0.7em;text-transform: uppercase;padding: 5px 4px;position: absolute;top: 0px;left: -3px;">Time</span></div>
+                            <label class="summTime_13_14_15"> </label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;-webkit-border-radius: 0 12px 0 0;border-radius: 0 12px 0 0; -moz-border-radius:0 12px 0 0;border-bottom:0;">
+                            <div style=""><span style="background: #000;color: #fff;font-size: 0.7em;text-transform: uppercase;padding: 5px 4px;position: absolute;top: 0px;left: -3px;-webkit-border-radius: 0 12px 0 0;border-radius: 0 12px 0 0; -moz-border-radius:0 12px 0 0;">Points</span></div>
+                            <label class="sum_1" id="summResult_13_14_15"></label>/5
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                     <td colspan="6">%%visuospatialComments%%</td>
+
+                 </tr>-->
+                    <!--     END VISUOSPATIAL / EXECUTIVE   -->
+                    <!--     NAMING     -->
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <div style="position: relative;float: left;padding: 7px;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:700;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;z-index: 99;">Naming</span></div>
+                            <div style="float: left;padding: 7px 7px 7px 7px;position:relative;">
+                                <img src="Content/img/name-1.png" alt="" width="200" height="130" title="" />
+                                <div style="position: relative;padding: 7px;">
+                                    <div style="float: left;padding: 7px;position: absolute;top: 6px;margin: 0 0 0 80px;">
+                                        <label style="font-size: 15px;">[ <span id="test_9_1"></span> ] <span id="testVal_9_1"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="float: left;padding: 7px 7px 7px 7px;">
+                                <img src="Content/img/name-2.png" alt="" width="200" height="130" title="" />
+                                <div style="position: relative;;padding: 7px;">
+                                    <div style="float: left;padding: 7px;position: absolute;top: 6px;margin: 0 0 0 80px;">
+                                        <label style="font-size: 15px;">[ <span id="test_9_2"></span> ] <span id="testVal_9_2"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="float: left;padding: 7px 7px 7px 7px;">
+                                <img src="Content/img/name-3.png" alt="" width="180" height="150" title="" />
+                                <div style="position: relative;padding: 7px;">
+                                    <div style="float: left;padding: 7px;position: absolute;top: -9px;margin: 0 0 0 80px;">
+                                        <label style="font-size: 15px;">[ <span id="test_9_3"></span> ] <span id="testVal_9_3"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_9"> </label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_9" class="sum_2"></span>/3</td>
+                    </tr>
+                    <!--    END NAMING      -->
+                    <!--     MEMORY     -->
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Memory</span></div>
+                            <div style="margin: 10px 0 10px 100px;">
+                                <span style="font-size:1.1em">
+                                    Read list of words, subject must repeat them.
+                                    <br />Do 2 trials, even if 1<sup style="font-size: 75%;line-height: 0;position: relative;vertical-align: baseline;top: -0.5em;">st</sup> trial is successful.
+                                    <br />Do a recall after 5 minutes.
+                                </span>
+                            </div>
+                        </td>
+                        <td colspan="4" style="border: none;padding:0;margin:0;white-space: normal;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <table id="memory-table" style="border-collapse: collapse;border-spacing: 0;width: 100%;">
+                                <tbody>
+                                    <tr style="border: none;padding: 0.1rem 1rem;">
+                                        <td style="border: 2px solid #000;border-left:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"></td>
+                                        <td style="border: 2px solid #000;padding: 0.2rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">FACE</span></td>
+                                        <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">VELVET</span></td>
+                                        <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">CHURCH</span></td>
+                                        <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">DAISY</span></td>
+                                        <td style="border: 2px solid #000;border-right:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.1em;">RED</span></td>
+                                    </tr>
+                                    <tr style="border: none;padding: 0.1rem 1rem;">
+                                        <td style="border: 2px solid #000;border-left:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.2em">1<sup style="font-size: 75%;line-height: 0;position: relative;vertical-align: baseline;top: -0.5em;">st</sup> trial</span></td>
+                                        <td style="border: 2px solid #000;padding: 0.2rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_1"></span> ] </label></td>
+                                        <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_2"></span> ] </label></td>
+                                        <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_3"></span> ] </label></td>
+                                        <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_4"></span> ] </label></td>
+                                        <td style="border: 2px solid #000;border-right:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_8_5"></span> ] </label></td>
+                                    </tr>
+                                    <tr style="border: none;padding: 0.1rem 1rem;">
+                                        <td style="border: 2px solid #000;border-bottom:0;border-left:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><span style="font-size:1.2em">2<sup style="font-size: 75%;line-height: 0;position: relative;vertical-align: baseline;top: -0.5em;">nd</sup> trial</span></td>
+                                        <td style="border: 2px solid #000;border-bottom:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_1"></span> ] </label></td>
+                                        <td style="border: 2px solid #000;border-bottom:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_2"></span> ] </label></td>
+                                        <td style="border: 2px solid #000;border-bottom:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_3"></span> ] </label></td>
+                                        <td style="border: 2px solid #000;border-bottom:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_4"></span> ] </label></td>
+                                        <td style="border: 2px solid #000;border-bottom:0;border-right:0;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;"><label style="font-size: 15px;"> [ <span id="test_18_5"></span> ] </label></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_8_18 "></label>
+                        </td>
+                        <td colspan="1" class="sum_8" id="summResult_8_18" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: middle;position: relative;text-align: left;font-size: 11px;border-bottom:0;">No<br />points</td>
+                    </tr>
+                    <!--     END MEMORY     -->
+                    <!--     ATTENTION      -->
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-right: none;border-bottom:0;border-right:0;">
+                            <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Attention</span></div>
+                            <div style="margin: 10px 0 10px 100px;">
+                                <span style="font-size:1.1em;">Read list of digits (1 digit/sec.).</span>
+                            </div>
+                        </td>
+                        <td colspan="3" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-left:none;border-right:none;border-bottom:0;border-right:0;">
+                            <div style="margin: 10px 0 10px;">
+                                <span style="font-size:1.1em;">Subject has to repeat them in the forward order<br />    Subject has to repeat them in the backward order</span>
+                            </div>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-left:none;border-bottom:0;border-right:0;">
+                            <div style="margin: 10px 0 10px;">
+                                <label style="font-size: 15px;">[ <span id="test_2_1"></span> ]</label> <span style="font-size:1.3em;">2 1 8 5 4</span><br />
+                                <label style="font-size: 15px;">[ <span id="test_19_1"></span> ]</label> <span style="font-size:1.3em;">7 4 2</span>
+                            </div>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_2_19" id="timeResult"></label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_2_19" class="sum_3"></span>/2</td>
+                    </tr>
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <div style="margin: 10px 0 10px;">
+                                <span style="font-size:1.1em;">Read list of letters. The subject must tap with his hand at each letter A. No points if ≥ 2 errors<br /></span>
+                                <div style="text-align: right;margin:5px 0;">
+                                    <label style="font-size: 15px;">[ <span id="test_3_1"></span> ]</label>
+                                    <span style="font-size:1.2em;" id="wordWrap">
+                                        <span id="word_1">F</span>
+                                        <span id="word_2">B</span>
+                                        <span id="word_3">A</span>
+                                        <span id="word_4">C</span>
+                                        <span id="word_5">M</span>
+                                        <span id="word_6">N</span>
+                                        <span id="word_7">A</span>
+                                        <span id="word_8">A</span>
+                                        <span id="word_9">J</span>
+                                        <span id="word_10">K</span>
+                                        <span id="word_11">L</span>
+                                        <span id="word_12">B</span>
+                                        <span id="word_13">A</span>
+                                        <span id="word_14">F</span>
+                                        <span id="word_15">A</span>
+                                        <span id="word_16">K</span>
+                                        <span id="word_17">D</span>
+                                        <span id="word_18">E</span>
+                                        <span id="word_19">A</span>
+                                        <span id="word_20">A</span>
+                                        <span id="word_21">A</span>
+                                        <span id="word_22">J</span>
+                                        <span id="word_23">A</span>
+                                        <span id="word_24">M</span>
+                                        <span id="word_25">O</span>
+                                        <span id="word_26">F</span>
+                                        <span id="word_27">A</span>
+                                        <span id="word_28">A</span>
+                                        <span id="word_29">B</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_3" id="timeResult"></label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_3" class="sum_3"></span>/1</td>
+                    </tr>
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <div style="margin: 10px 0 10px;">
+                                <span style="font-size:1.1em;">Serial 7 subtraction starting at 100</span>
+                                <span style="display: inline-block;margin: 0 30px;">
+                                    <label style="font-size: 15px;">[ <span id="test_4_1"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_1"></span></span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 30px;">
+                                    <label style="font-size: 15px;">[ <span id="test_4_2"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_2"></span></span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 30px;">
+                                    <label style="font-size: 15px;">[ <span id="test_4_3"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_3"></span></span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 30px;">
+                                    <label style="font-size: 15px;">[ <span id="test_4_4"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_4"></span></span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 30px;">
+                                    <label style="font-size: 15px;">[ <span id="test_4_5"></span> ]</label><span style="font-size:1.2em;">&nbsp;&nbsp;<span id="testVal_4_5"></span></span>
+                                </span>
+                            </div>
+                            <div style="margin: 10px 0 10px;text-align: right;">
+                                4 of 5 correct subtractions: <span style="font-weight: 700;font-size:1.1em;">3 pts</span>, 2 or 3 correct: <span style="font-weight: 700;font-size:1.1em;">2 pts</span>, 1 correct: <span style="font-weight: 700;font-size:1.1em;">1 pt</span>, 0 correct: <span style="font-weight: 700;font-size:1.1em;">0 pt</span>
+                            </div>
+
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_4" id="timeResult"></label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_4" class="sum_3"></span>/3</td>
+                    </tr>
+                    <!--     END ATTENTION      -->
+                    <!--     LANGUAGE   -->
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Language </span></div>
+                            <div style="margin: 10px 0 10px 100px;">
+                                <span style="font-size:1.1em;">Repeat: I only know that John is the one to help today.</span> <label style="font-size: 15px;">[ <span id="test_6_1"></span> ]</label>
+                                <div style="margin: 0;">
+                                    <span style="font-size:1.1em;">The cat always hid under the couch when dogs were in the room.</span> <label style="font-size: 15px;">[ <span id="test_20_1"></span> ]</label>
+                                </div>
+                            </div>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_6_20" id="timeResult"></label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_6_20" class="sum_4"></span>/2</td>
+                    </tr>
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <div style="margin: 10px 0 10px;">
+                                <span style="font-size:1.1em;float:left;padding:0 0 5px 30px;">Fluency / Name maximum number of words in one minute that begin with the letter F. </span><label style="font-size: 1.2em;">[ <span id="test_7_1"></span> ]</label> <span style="font-size: 1.2em;" id="testVal_7_1"></span>
+
+                                <span style="float: right;font-size: 1.2em;margin:-5px 20px 0 0;display:block;">    (N <span style="font-weight:bold;">≥</span> 11 words)</span>
+                            </div>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_7"></label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_7" class="sum_4"></span>/1</td>
+                    </tr>
+                    <!--     END LANGUAGE   -->
+                    <!--     ABSTRACTION    -->
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Abstraction</span></div>
+                            <div style="margin: 5px 0 5px 135px;">
+                                <span style="font-size:1.1em;">Similarity between e.g. banana - orange = fuit</span>
+                                <span style="display: inline-block;margin: 0 20px;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_1_1"></span> ]</label> train-bicycle</span>
+                                <span style="display: inline-block;margin: 0 20px;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_1_2"></span> ]</label> watch-ruler</span>
+                            </div>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_1"> </label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_1" class="sum_5"></span>/2</td>
+                    </tr>
+                    <!--     END ABSTRACTION    -->
+                    <!--     DELAYED RECALL     -->
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="5" style="border: none;padding: 0;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-bottom:0;border-right:0;">
+                            <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 5px 10px;position: absolute;top: -2px;left: -4px;">Delayed recall</span></div>
+                            <div style="margin: 0 0 0 135px;">
+                                <div style="position: relative;"><span style="position: absolute;top: 40px;left: -120px;text-transform: uppercase;font-size: 18px;font-weight: 700;"></span></div>
+                                <table id="memory-table" style="border-collapse: collapse; border-spacing: 0; vertical-align: top; width: 100%; ">
+                                    <tbody>
+                                        <tr style="border: none;padding: 0.1rem 1rem;">
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;text-align:right;">Has to recall words<br />WITH NO CUE</td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;">FACE<br /><label style="font-size: 1.1em;">[ <span id="test_5_1"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;">VELVET<br /><label style="font-size: 1.1em;">[ <span id="test_5_2"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;">CHURCH<br /><label style="font-size: 1.1em;">[ <span id="test_5_3"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;">DAISY<br /><label style="font-size: 1.1em;">[ <span id="test_5_4"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-right:none;font-size:1.2em;">RED<br /><label style="font-size: 1.1em;">[ <span id="test_5_5"></span> ]</label></td>
+                                        </tr>
+                                        <tr style="border: none;padding: 0.1rem 1rem;">
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;text-align:right;">Category cue</td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_6"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_7"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_8"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_9"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-right:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_10"></span> ]</label></td>
+                                        </tr>
+                                        <tr style="border: none;padding: 0.1rem 1rem;">
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;text-align:right;">Multiple choice cue</td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_11"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_12"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_13"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_14"></span> ]</label></td>
+                                            <td style="border: 2px solid #000;padding: 0.1rem 1rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-top: none;border-bottom:none;border-right:none;font-size:1.2em;"><label style="font-size: 1.1em;">[ <span id="test_5_15"></span> ]</label></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;border-right:0;">
+                            <label class="summTime_5" id="timeResult"></label>
+                        </td>
+
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-bottom:0;"><span id="summResult_5" class="sum_6"></span>/5</td>
+                    </tr>
+                    <!--     END DELAYED RECALL     -->
+                    <!--     ORIENTATION    -->
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="5" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-right:0;-webkit-border-radius: 0 0 0 12px;border-radius: 0 0 0 12px; -moz-border-radius:0 0 0 12px;">
+                            <div style="position: relative;"><span style="background: #000;color: #fff;font-size: 13px;font-weight:bold;text-transform: uppercase;padding: 8px 10px;position: absolute;top: -2px;left: -4px;-webkit-border-radius: 0 0 0 12px;border-radius: 0 0 0 12px; -moz-border-radius:0 0 0 12px;">Orientation</span></div>
+                            <div style="margin: 5px 0 0 135px;">
+                                <span style="display: inline-block;margin: 0 20px;">
+                                    <label style="font-size: 1.1em;">[ <span id="test_12_1"></span> ]</label><span style="font-size:1.2em;">&nbsp;Date</span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 20px;">
+                                    <label style="font-size: 1.1em;">[ <span id="test_12_2"></span> ]</label><span style="font-size:1.2em;">&nbsp;Month</span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 20px;">
+                                    <label style="font-size: 1.1em;">[ <span id="test_12_3"></span> ]</label><span style="font-size:1.2em;">&nbsp;Year</span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 20px;">
+                                    <label style="font-size: 1.1em;">[ <span id="test_12_4"></span> ]</label><span style="font-size:1.2em;">&nbsp;Day</span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 20px;">
+                                    <label style="font-size: 1.1em;">[ <span id="test_12_5"></span> ]</label><span style="font-size:1.2em;">&nbsp;Place</span>
+                                </span>
+                                <span style="display: inline-block;margin: 0 20px;">
+                                    <label style="font-size: 1.1em;">[ <span id="test_12_6"></span> ]</label><span style="font-size:1.2em;">&nbsp;City</span>
+                                </span>
+                            </div>
+                        </td>
+
+                        <td colspan="1" style="border: none;padding: 0.1rem 0;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-right:0;">
+                            <label class="summTime_12" id="timeResult"></label>
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;"><span id="summResult_12" class="sum_7"></span>/6</td>
+                    </tr>
+                    <!--     END ORIENTATION    -->
+                </tbody>
+                <tfoot>
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;"><span style="font-weight: 700;font-size:1.1em;">© Z.Nasreddine MD</span></td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;"><span style="font-weight: 700;font-size:1.2em;">www.mocatest.org</span></td>
+                        <td colspan="2" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;font-size:1.2em;text-align:right;"><label>Normal ≥ 26 / 30</label></td>
+                        <td colspan="2" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: top;position: relative;border-right: none;font-size: 15px;border-top:0;-webkit-border-radius: 0 0 0 12px;border-radius: 0 0 0 12px; -moz-border-radius:0 0 0 12px;">
+                            <label>MIS<br /><b>General</b> <br /><b>General time</b></label>
+
+                        </td>
+                        <td colspan="1" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;border-style: solid;vertical-align: bottom;position: relative;text-align: center;font-size: 15px;padding-bottom: 10px;border-left: none;border-top:0;-webkit-border-radius: 0 0 12px 0;border-radius: 0 0 12px 0; -moz-border-radius:0 0 12px 0;">
+                            <label>
+                                <span id="summMIS"></span>/15<br /><b><span id="summAll"></span>/30</b><br /><b>
+                                    <span id="timeAll">05:30</span>
+                                </b>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr style="border: none;padding: 0.1rem 0.2rem;">
+                        <td colspan="4" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;font-size:1.2em;">Administered by: <span id="MDname"></span></td>
+                        <td colspan="2" style="border: none;padding: 0.1rem 0.2rem;white-space: nowrap;vertical-align: top;position: relative;text-align:center;font-size:1.1em;">Add 1 point if ≤ 12 yr edu</td>
+                    </tr>
+
+                </tfoot>
+            </table>
+            <table style="border-spacing: 0;border: none;font-size: 11px;width: 100%;margin: 0 auto;">
+                <tr id="BackButton">
+                    <td colspan="6">
+                        <p style="font-size: 30px;text-decoration: underline;display: none;" id="commentTitle">Comments</p>
+                        <div id="comments" style="margin-top: 20px;">
+                            <div class="commentTemplate" style="display:none;">
+                                <div style=" font-size:25px" class="commentTitle"></div><br />
+                                <div class="commentText"></div>
+                                <img class="commentImg" style="width:200px" />
+                            </div>
+                        </div>
+                        <div class="" style="text-align: right;">
+                            <a href="#" style="    padding: 5px 10px; margin: 10px 0;   display: inline-block;    font-size: 16px;    text-decoration: none;    color: #fff; background: #000;
+    font-weight: bold;    text-transform: uppercase;" onclick="window.history.back();return false;">Back</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+    </div>
+
+    <div class="footer">
+        <div class="copyright"> e-MoCA © Copyright 2014. </div>
+        <div class="footer-tools">
+            <span class="go-top">
+                <i class="icon-angle-up"></i>
+            </span>
+        </div>
+    </div>
+
+
+
+    <!--section Scripts -->
+
+    <script src="Scripts/js/test_result.final.js"></script>
+    <style type="text/css" media="screen">
+        table {
+            max-width: 1000px;
+        }
+    </style>
+    <!-- end section-->
+</body>
+</html>

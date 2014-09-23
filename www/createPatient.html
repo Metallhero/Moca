@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="Content/bootstrap.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300,700italic' rel='stylesheet' type='text/css'>
+    <link href="Content/style-mectronic.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <script src="Scripts/modernizr-2.6.2.js"></script>
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/bootstrap.js"></script>
+    <script src="Scripts/respond.js"></script>
+    <script src="Scripts/jquery.session.js"></script>
+    <link href="Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="Content/style-responsive.css" rel="stylesheet" />
+    <link href="Content/default.css" rel="stylesheet" />
+    <!--@*Select2*@-->
+    <link href="Scripts/select2/select2_metro.css" rel="stylesheet" />
+    <script src="Scripts/select2/select2.min.js"></script>
+    <!--=======-->
+    <script src="Scripts/jquery.bpopup.min.js"></script>
+
+    <!--@*Bootstrap switch*@-->
+    <link href="Content/bootstrap-switch/bootstrap-switch.css" rel="stylesheet" />
+    <script src="Content/bootstrap-switch/bootstrap-switch.min.js"></script>
+    <!--@*===============*@-->
+    <script src="Scripts/js/db.manager.js"></script>
+    <script src="Scripts/js/site.manage.js"></script>
+
+
+
+</head>
+<body class="login">
+    <!--section Popup -->
+    <div id="popups"></div>
+   
+    <!--  end section -->
+    <div class="header navbar navbar-inverse ">
+        <div class="header-inner">
+            <a href="/" class="navbar-brand">
+                <span>e-MoCA version 8.1</span>
+            </a>
+
+            <a data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" href="javascript:;">
+                <img alt="" src="Content/img/sidebar-toggler.jpg">
+            </a>
+            <ul class="nav navbar-nav pull-right">
+                <!-- BEGIN USER LOGIN DROPDOWN -->
+                <li class="user">
+                    <a data-close-others="true" data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" href="#" style="padding-top:10px;padding-bottom:10px;">
+                        <span class="username">
+                            <!--Username-->
+                        </span>
+                        <i class="icon-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu"><li><a href="/">Start new test</a></li><li><a href="testList.html">Show test results</a></li></ul>
+                </li>
+                <!-- END USER LOGIN DROPDOWN -->
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="content">
+        <div class="login-form ">
+            <h3 class="form-title">Patient information</h3>
+            <div class="alert alert-error hide">
+                <button class="close" data-dismiss="alert"></button>
+                <span>Enter patient information.</span>
+            </div>
+            SELECT AN EXISTING PATIENT
+         
+            <div class="form-group">
+                <label class="control-label visible-ie8 visible-ie9">SELECT AN EXISTING PATIENT</label>
+                <div class="input-icon">
+                    <i class="icon-user"></i>
+                    <select id="ddlPatients" class="form-control select2me" ></select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button id="btnSubmitDll" class="btn purple pull-right submit">
+                    <i class="icon-arrow-right"></i> Continue
+                </button>
+            </div>
+            
+            <h3>OR</h3>
+            CREATE A NEW PATIENT
+            <div>
+                <div class="form-group">
+
+                    <label class="control-label visible-ie8 visible-ie9">Name</label>
+                    <div class="input-icon">
+                        <i class="icon-user"></i>
+                        <input id="txtName" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Name" name="name" />
+                    </div>
+                    
+                </div>
+                DATE OF BIRTH
+                <div class="form-group">
+
+                    <label class="control-label visible-ie8 visible-ie9">Birthday</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="icon-calendar"></i>
+                        </span>
+                        <input type="text" id="BirthDay" data-format="DD-MM-YYYY" data-template="DD MMMM YYYY" value="09-01-2013" name="BirthDay" style="width:150px;">
+                    </div>
+
+                </div>
+                <div class="form-group">
+
+                    <label class="control-label visible-ie8 visible-ie9">Gender</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="icon-male"></i> <i class="icon-female"></i>
+                        </span>
+                        <select id="ddlSex" class="form-control select2me" name="Gender" data-placeholder="Sex">
+                            <option value="0">Female</option>
+                            <option value="1">Male</option>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                    <label class="control-label visible-ie8 visible-ie9">Education</label>
+                    <div class="input-icon">
+                        <i class="icon-certificate"></i>
+                        <input id="txtEducation" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Education" name="Education"  />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                    <label class="control-label visible-ie8 visible-ie9">Chart Number</label>
+                    <div class="input-icon">
+                        <i class="icon-asterisk"></i>
+                        <input id="txtChartNumber" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Chart Number" name="chartnumber" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
+                    <label class="control-label visible-ie8 visible-ie9">Physicanr</label>
+                    <div class="input-icon">
+                        <i class="icon-user-md"></i>
+                        <input id="txtPhysican" class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Physician" name="physican" />
+
+                    </div>
+               
+                </div>
+                <div class="form-actions">
+                    <button id="btnSubmit" class="btn purple pull-right submit">
+                        <i class="icon-arrow-right"></i> Continue
+                    </button>
+                </div>
+            </div>
+            
+            <div class="" style="margin-top: 20px;text-align: right;">
+                <button type="button" class="btn blue" onclick="ShowConfirmPopup('Show test results', 'Are you sure ?', 'testList.html')">
+                    <i class="icon-arrow-right"></i>
+                    Show test results
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="copyright"> e-MoCA © Copyright 2014. </div>
+        <div class="footer-tools">
+            <span class="go-top">
+                <i class="icon-angle-up"></i>
+            </span>
+        </div>
+    </div>
+
+
+
+    <!--section Scripts -->
+    <link href="Content/login.css" rel="stylesheet" />
+
+    <link href="Content/jquery.easydropdown..css" rel="stylesheet" />
+    <script src="Scripts/jquery.easydropdown.js"></script>
+    <script src="Scripts/combodate/combodate.js"></script>
+    <script src="Scripts/combodate/moment.js"></script>
+   
+
+    <script src="Scripts/js/createPatient.js"></script>
+
+    <!-- end section-->
+</body>
+</html>

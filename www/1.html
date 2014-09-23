@@ -54,7 +54,7 @@
                         </span>
                         <i class="icon-angle-down"></i>
                     </a>
-                    <ul class="dropdown-menu"><li><a href="/">Start new test</a></li><li><a href="testList.html">Show test results</a></li></ul>
+                    <ul class="dropdown-menu"><li><a href="/">Start new test</a></li><li><a href="/Test/List">Show test results</a></li></ul>
                 </li>
                 <!-- END USER LOGIN DROPDOWN -->
             </ul>
@@ -63,22 +63,9 @@
     </div>
 
     <div class="content">
-        <h3 class="form-title">Start test</h3>
-        <div class="alert alert-error hide">
-            <button class="close" data-dismiss="alert"></button>
-        </div>
-        <div class="form-actions">
-            <button id="btnSubmit" class="btn purple pull-right">
-                Start <i class="icon-circle-arrow-right"></i>
-            </button>
+ 
 
-        </div>
-        <div class="" style="margin-top: 20px;text-align: right;">
-            <button type="button" class="btn blue" id="btnContinue" onclick="ShowConfirmPopup('Show test results', 'Are you sure ?', 'testList.html')" >
-                <i class="icon-arrow-right"></i>
-                Show test results
-            </button>
-        </div>
+
     </div>
 
     <div class="footer">
@@ -93,31 +80,7 @@
 
 
     <!--section Scripts -->
-    <link href="Content/login.css" rel="stylesheet" />
-    <script>
-        $(document).ready(function () {
-            $('.navbar-toggle').remove();
-            $("#btnSubmit").click(function () {
-                var currentDate = new Date();
-                var testData =
-                   {
-                       tableName: 'MocaTest',
-                       data: [{
-                           "userId": $.session.get('userId'),
-                           "clientId": $.session.get('clientId'),
-                           "testDate": SqliteDate(currentDate)
-                       }]
-                   };
-
-                DB.insertData(testData, function (data) {
-                    log(data);
-                    $.session.set('testId', data.insertId);
-                    window.location = allPagesWithExt(0);
-                });
-                return false;
-            });
-        });
-    </script>
+   
     <!-- end section-->
 </body>
 </html>

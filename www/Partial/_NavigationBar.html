@@ -1,0 +1,107 @@
+﻿ 
+<div class="page-sidebar-wrapper">
+    <div class="page-sidebar navbar-collapse collapse">
+        <ul data-slide-speed="200" data-auto-scroll="true" class="page-sidebar-menu">
+            <li class="parentLi">
+                <a href="javascript:;">
+                    <span class="title">VISUOSPATIAL / EXECUTIVE</span>
+                    <span class="selected"></span>
+                    <span class="arrow open"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a class="trail" href="TrailInstructions">Trail</a>
+                    </li>
+                    <li>
+                        <a class="cube" href="CubeInstructions">Cube</a>
+                    </li>
+                    <li>
+                        <a class="clock" href="ClockInstructions">Clock</a>
+                    </li>
+
+                </ul>
+            </li>
+            <li class="naming">
+                <a href="NamingInstructions">
+                    <span class="title">NAMING</span>
+                </a>
+            </li>
+            <li class="memory">
+                <a href="MemoryInstructions">
+                    <span class="title">MEMORY</span>
+                </a>
+            </li>
+            <li class="parentLi">
+                <a href="javascript:;">
+                    <span class="title">ATTENTION</span>
+                    <span class="arrow "></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a class="digitforward" href="DigitForwardInstructions">Digit span-Forward</a>
+                    </li>
+                    <li>
+                        <a class="digitbackward" href="DigitBackwardInstructions">Digit span-Backward</a>
+                    </li>
+                    <li>
+                        <a class="letter" href="LetterAInstructions">Letter A</a>
+                    </li>
+                    <li>
+                        <a class="calculation" href="CalculationInstructions">Calculation</a>
+                    </li>
+
+                </ul>
+            </li>
+            <li class="parentLi">
+                <a href="javascript:;">
+                    <span class="title">LANGUAGE</span>
+                    <span class="arrow "></span>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a class="repetition" href="RepetitionInstructions">Repetition</a>
+                    </li>
+                    <li>
+                        <a class="fluency" href="FluencyInstructions">Fluency</a>
+                    </li>
+
+                </ul>
+            </li>
+            <li class="abstraction">
+                <a href="AbstractionInstructions">
+                    <span class="title">ABSTRACTION</span>
+                </a>
+            </li>
+            <li class="delayedrecall">
+                <a href="DelayedRecallInstructions">
+                    <span class="title">DELAYED RECALL</span>
+                </a>
+            </li>
+            <li class="orientation">
+                <a href="OrientationInstructions">
+                    <span class="title">ORIENTATION</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function SetActive(className)
+    {
+        $('.'+className).addClass("active");
+        $('.' + className).closest(".parentLi").addClass("active");
+        $('.' + className).closest(".parentLi").find('.arrow').addClass('open');
+    }
+    $(document).ready(function () {
+        var currUrl = window.location.href;
+        var keys = ['trail', 'cube', 'clock', 'naming', 'memory', 'digitforward', 'digitbackward', 'letter', 'calculation', 'repetition', 'fluency', 'abstraction', 'delayedrecall', 'orientation'];
+        for (var i = 0; i < keys.length; i++) {
+            if (currUrl.toLowerCase().indexOf(keys[i]) != -1) {
+                SetActive(keys[i]);
+                return;
+            }
+        }
+    });
+
+</script>
